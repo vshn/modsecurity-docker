@@ -4,6 +4,9 @@ This image is based on the official [`owasp/modsecurity-crs:v3.1`](https://hub.d
 It contains the necessary tweaks to run on OpenShift.
 
 ## Usage
+How to use the image
+
+
 ### Configuration
 There are a variety of environment variables available to configure the image.
 

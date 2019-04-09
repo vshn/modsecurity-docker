@@ -1,3 +1,5 @@
+# Base image: https://hub.docker.com/r/owasp/modsecurity-crs/dockerfile
+
 FROM owasp/modsecurity-crs:v3.1
 
 ENV PARANOIA_LEVEL=1 \
@@ -21,10 +23,35 @@ ENV PARANOIA_LEVEL=1 \
     PROXY_TIMEOUT=120 \
     HTTPD_MAX_REQUEST_WORKERS=250
 
-COPY conf/httpd.conf /etc/apache2/conf/httpd.conf
+# COPY conf/httpd.conf /etc/apache2/conf/httpd.conf
 
-RUN mkdir -p /var/lock/apache2 /modsecurity/tmp /modsecurity/data/upload /modsecurity/data/audit /modsecurity/data/log /modsecurity/rules/before-crs /modsecurity/rules/after-crs \
-    && chgrp -R 0 /etc/apache2/ /var/run/ /var/log/ /var/www/html/ /var/lock/apache2 /modsecurity \
-    && chmod -R g=u /etc/apache2/ /var/run/ /var/log/ /var/www/html/ /var/lock/apache2 /modsecurity
+COPY modsecurity.d/modsecurity.conf /etc/apache2/modsecurity.d/
+COPY sites-available/000-default.conf /etc/apache2/sites-available/
 
-CMD ["apachectl", "-f", "/etc/apache2/conf/httpd.conf", "-D", "FOREGROUND"]
+# fix hack of upstream image, enable confs and modules
+RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
+ && a2enconf security \
+ && a2enmod headers
+
+RUN mkdir -p \
+ /var/lock/apache2 \
+ /modsecurity/tmp \
+ /modsecurity/data/upload \
+ /modsecurity/data/audit \
+ /modsecurity/data/log \
+ /modsecurity/rules/before-crs \
+ /modsecurity/rules/after-crs \
+ && chgrp -R 0 \
+ /etc/apache2/ \
+ /var/run/ \
+ /var/log/ \
+ /var/www/html/ \
+ /var/lock/apache2 \
+ /modsecurity \
+ && chmod -R g=u \
+ /etc/apache2/ \
+ /var/run/ \
+ /var/log/ \
+ /var/www/html/ \
+ /var/lock/apache2 \
+ /modsecurity

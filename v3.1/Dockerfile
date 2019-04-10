@@ -6,6 +6,7 @@ ENV APACHE_RUN_USER=www-data \
     SERVER_NAME=localhost \
     PORT=8080 \
     BACKEND=http://localhost:8080 \
+    APACHE_TIMEOUT=5 \
     APACHE_LOGLEVEL=notice \
     APACHE_ERRORLOG=/dev/stderr \
     APACHE_ACCESSLOG="/dev/stdout extendedjson" \
@@ -42,10 +43,10 @@ COPY custom-rules/after-crs /opt/modsecurity/rules/after-crs
 
 # fix hack of upstream image, enable confs and modules
 RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
+ && sed -i 's/^Timeout 300$/Timeout ${APACHE_TIMEOUT}/' /etc/apache2/apache2.conf \
+ && sed -i 's/MaxRequestWorkers .*/MaxRequestWorkers ${HTTPD_MAX_REQUEST_WORKERS}/' /etc/apache2/mods-available/mpm_event.conf \
  && a2enconf logging security \
- && a2enmod headers remoteip \
- && sed -i 's/^Timeout 300$/Timeout 5/' /etc/apache2/apache2.conf \
- && sed -i 's/MaxRequestWorkers.*/MaxRequestWorkers ${HTTPD_MAX_REQUEST_WORKERS}/' /etc/apache2/mods-enabled/mpm_event.conf
+ && a2enmod headers remoteip
 
 RUN mkdir -p \
     /tmp/modsecurity \

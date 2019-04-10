@@ -80,6 +80,8 @@ There are a variety of environment variables available to configure the image.
   - `CustomLog` (in default site)
 * APACHE_PERFLOG
   - `CustomLog` (in default site)
+* APACHE_TIMEOUT
+  - `Timeout` (in Apache configuration)
 * PROXY_TIMEOUT
   - `ProxyTimeout` (in default site)
 

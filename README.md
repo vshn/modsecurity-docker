@@ -85,6 +85,12 @@ There are a variety of environment variables available to configure the image.
   - `tx.max_file_size`
 * MODSEC_MAX_COMBINED_SIZE
   - `tx.combined_file_sizes`
+* MODSEC_DEBUG_LOG
+  - `SecDebugLog`
+* MODSEC_DEBUG_LOGLEVEL
+  - `SecDebugLogLevel`
+
+For the default values look at the `Dockerfile`.
 
 #### Apache
 

@@ -13,6 +13,8 @@ ENV APACHE_RUN_USER=www-data \
     APACHE_PERFLOG="/dev/stdout perflogjson env=write_perflog" \
     MODSEC_AUDIT_LOG=/var/log/modsecurity/audit.log \
     MODSEC_AUDIT_STORAGE=/var/log/modsecurity/audit/ \
+    MODSEC_DEBUG_LOG=/dev/null \
+    MODSEC_DEBUG_LOGLEVEL=0 \
     MODSEC_ALLOWED_METHODS='GET HEAD POST OPTIONS DELETE PUT PROPFIND' \
     MODSEC_ALLOWED_CONTENT='application/x-www-form-urlencoded|multipart/form-data|text/xml|application/xml|application/x-amf|application/json' \
     MODSEC_ARG_NAME_LENGTH=256 \

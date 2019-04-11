@@ -133,10 +133,10 @@ order to be loaded.
 You should mount `/var/log/modsecurity` onto a persistent volume.
 Configured directories and files are:
 
-* SecAuditLog
-  - `/var/log/modsecurity/audit.log`
-* SecAuditLogStorageDir
-  - `/var/log/modsecurity/audit`
+* MODSEC_AUDIT_LOG (Default: `/var/log/modsecurity/audit.log`)
+  - `SecAuditLog`
+* MODSEC_AUDIT_STORAGE (Default: `/var/log/modsecurity/audit`)
+  - `SecAuditLogStorageDir`
 
 #### Ephemeral
 
@@ -152,9 +152,9 @@ logs to the console, and let the cluster's ELK stack deal with logging:
 You should mount `/tmp/modsecurity` onto a scratch space, such as an
 `emptyDir` volume. Configured settings are:
 
-* SecDataDir
-  - `/tmp/modsecurity`
-* SecTmpDir
-  - `/tmp/modsecurity`
-* SecUploadDir
-  - `/tmp/modsecurity`
+* MODSEC_DATA_DIR (Default: `/tmp/modsecurity`)
+  - `SecDataDir`
+* MODSEC_TMP_DIR (Default: `/tmp/modsecurity`)
+  - `SecTmpDir`
+* MODSEC_UPLOAD_DIR (Default: `/tmp/modsecurity`)
+  - `SecUploadDir`

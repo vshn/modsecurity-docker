@@ -39,7 +39,7 @@ How to use the image.
 
 There are a variety of environment variables available to configure the image.
 
-*Most important are the following three*
+*Most important are the following ones:*
 
 * PARANOIA_LEVEL (Default: 1)
   - Ranging from 1-4. Have a look at the section *'What are paranoia levels, and
@@ -122,8 +122,8 @@ For the default values look at the `Dockerfile`.
 ### Custom rules
 
 Mount your custom rules at `/opt/modsecurity/rules/before-crs/` to load them
-before the Core Rule Set or at `/opt/modsecurity/rules/after-crs/` to load
-when the CRS is already loaded. The custom rule files must end in `.conf` in
+before the Core Rule Set and at `/opt/modsecurity/rules/after-crs/` to load
+after the CRS has been loaded. All custom rule files must end in `.conf` in
 order to be loaded.
 
 ### Data

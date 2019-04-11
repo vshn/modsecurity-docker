@@ -43,8 +43,8 @@ COPY ports.conf /etc/apache2/
 COPY sites-available /etc/apache2/sites-available
 COPY conf-available /etc/apache2/conf-available
 COPY modsecurity.d /etc/apache2/modsecurity.d
-COPY custom-rules/before-crs /opt/modsecurity/rules/before-crs
-COPY custom-rules/after-crs /opt/modsecurity/rules/after-crs
+COPY custom-rules/before-crs.dist /opt/modsecurity/rules/before-crs.dist
+COPY custom-rules/after-crs.dist /opt/modsecurity/rules/after-crs.dist
 
 # fix hack of upstream image, enable confs and modules
 RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
@@ -55,6 +55,8 @@ RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
 
 RUN mkdir -p \
     /tmp/modsecurity \
+    /opt/modsecurity/rules/after-crs \
+    /opt/modsecurity/rules/before-crs \
     /var/lock/apache2 \
     /var/log/modsecurity/audit \
  && chgrp -R 0 \

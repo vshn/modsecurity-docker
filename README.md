@@ -12,6 +12,24 @@ This image is based on the official [`owasp/modsecurity-crs`](https://hub.docker
 
 It contains the necessary tweaks to run on OpenShift.
 
+Supported Tags
+--------------
+
+- [![latest](
+  https://img.shields.io/badge/latest-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](
+  https://github.com/vshn/modsecurity-docker/blob/master/v3.1/Dockerfile) [![size/layers](
+  https://images.microbadger.com/badges/image/vshn/modsecurity:latest.svg)](
+  https://microbadger.com/images/vshn/modsecurity:latest) [![based on](
+  https://img.shields.io/badge/Git-master-grey.svg?colorA=5a5b5c&colorB=9a9b9c&logo=github)](
+  https://github.com/SpiderLabs/owasp-modsecurity-crs/tree/v3.1/dev/util/docker)
+- [![3.1](
+  https://img.shields.io/badge/3.1-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](
+  https://github.com/vshn/modsecurity-docker/blob/master/v3.1/Dockerfile) [![size/layers](
+  https://images.microbadger.com/badges/image/vshn/modsecurity:3.1.svg)](
+  https://microbadger.com/images/vshn/modsecurity:3.1) [![based on](
+  https://img.shields.io/badge/Git-master-grey.svg?colorA=5a5b5c&colorB=9a9b9c&logo=github)](
+  https://github.com/SpiderLabs/owasp-modsecurity-crs/tree/v3.1/dev/util/docker)
+
 Usage
 -----
 

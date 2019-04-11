@@ -1,11 +1,19 @@
-# ModSecurity Docker image
+ModSecurity Docker image
+========================
 
-This image is based on the official [`owasp/modsecurity-crs`](
-https://hub.docker.com/r/owasp/modsecurity-crs) image.
+[![dockeri.co](http://dockeri.co/image/vshn/modsecurity)](https://hub.docker.com/r/vshn/modsecurity/)
+
+[![Build Status](https://img.shields.io/docker/cloud/build/vshn/modsecurity.svg)](https://hub.docker.com/r/vshn/modsecurity/builds
+) [![GitHub issues](https://img.shields.io/github/issues-raw/vshn/modsecurity-docker.svg)](https://github.com/vshn/modsecurity-docker/issues
+) [![GitHub PRs](https://img.shields.io/github/issues-pr-raw/vshn/modsecurity-docker.svg)](https://github.com/vshn/modsecurity-docker/pulls
+) [![License](https://img.shields.io/github/license/vshn/modsecurity-docker.svg)](https://github.com/vshn/modsecurity-docker/blob/master/LICENSE)
+
+This image is based on the official [`owasp/modsecurity-crs`](https://hub.docker.com/r/owasp/modsecurity-crs) image.
 
 It contains the necessary tweaks to run on OpenShift.
 
-## Usage
+Usage
+-----
 
 How to use the image.
 

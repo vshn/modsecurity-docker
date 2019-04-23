@@ -15,9 +15,9 @@ ENV APACHE_RUN_USER=www-data \
     MODSEC_AUDIT_STORAGE=/var/log/modsecurity/audit/ \
     MODSEC_DEBUG_LOG=/dev/null \
     MODSEC_DEBUG_LOGLEVEL=0 \
-    MODSEC_DATA_DIR=/tmp/modsecurity \
-    MODSEC_TMP_DIR=/tmp/modsecurity \
-    MODSEC_UPLOAD_DIR=/tmp/modsecurity \
+    MODSEC_DATA_DIR=/tmp/modsecurity/data \
+    MODSEC_TMP_DIR=/tmp/modsecurity/tmp \
+    MODSEC_UPLOAD_DIR=/tmp/modsecurity/upload \
     MODSEC_ALLOWED_METHODS='GET HEAD POST OPTIONS DELETE PUT PROPFIND' \
     MODSEC_ALLOWED_CONTENT='application/x-www-form-urlencoded|multipart/form-data|text/xml|application/xml|application/x-amf|application/json' \
     MODSEC_ARG_NAME_LENGTH=256 \
@@ -26,11 +26,13 @@ ENV APACHE_RUN_USER=www-data \
     MODSEC_MAX_COMBINED_SIZE=100000000 \
     MODSEC_TAG=modsecurity \
     RULE_ENGINE=On \
-    RESP_BODY_ACCESS=On \
-    RESP_BODY_LIMIT=500000000 \
+    REMOTEIP_INT_PROXY='10.1.0.0/16' \
+    REQ_HEADER_FORWARDED_PROTO='https' \
     REQ_BODY_LIMIT=100000000 \
     REQ_BODY_NOFILES_LIMIT=5242880 \
     REQ_BODY_ACCESS=On \
+    RESP_BODY_ACCESS=On \
+    RESP_BODY_LIMIT=500000000 \
     PCRE_MATCH_LIMIT=500000 \
     PCRE_MATCH_LIMIT_RECURSION=500000 \
     PROXY_TIMEOUT=120 \
@@ -54,9 +56,11 @@ RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
  && a2enmod headers remoteip
 
 RUN mkdir -p \
-    /tmp/modsecurity \
     /opt/modsecurity/rules/after-crs \
     /opt/modsecurity/rules/before-crs \
+    /tmp/modsecurity/data \
+    /tmp/modsecurity/tmp \
+    /tmp/modsecurity/upload \
     /var/lock/apache2 \
     /var/log/modsecurity/audit \
  && chgrp -R 0 \

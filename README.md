@@ -1,5 +1,4 @@
-ModSecurity Docker image
-========================
+# ModSecurity Docker image
 
 [![dockeri.co](http://dockeri.co/image/vshn/modsecurity)](https://hub.docker.com/r/vshn/modsecurity/)
 
@@ -12,17 +11,16 @@ This image is based on the official [`owasp/modsecurity-crs`](https://hub.docker
 
 It contains the necessary tweaks to run on OpenShift.
 
-Supported Tags
---------------
+## Supported Tags
 
-- [![latest](
+* [![latest](
   https://img.shields.io/badge/latest-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](
   https://github.com/vshn/modsecurity-docker/blob/master/v3.1/Dockerfile) [![size/layers](
   https://images.microbadger.com/badges/image/vshn/modsecurity:latest.svg)](
   https://microbadger.com/images/vshn/modsecurity:latest) [![based on](
   https://img.shields.io/badge/Git-master-grey.svg?colorA=5a5b5c&colorB=9a9b9c&logo=github)](
   https://github.com/SpiderLabs/owasp-modsecurity-crs/tree/v3.1/dev/util/docker)
-- [![3.1](
+* [![3.1](
   https://img.shields.io/badge/3.1-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](
   https://github.com/vshn/modsecurity-docker/blob/master/v3.1/Dockerfile) [![size/layers](
   https://images.microbadger.com/badges/image/vshn/modsecurity:3.1.svg)](
@@ -30,8 +28,7 @@ Supported Tags
   https://img.shields.io/badge/Git-master-grey.svg?colorA=5a5b5c&colorB=9a9b9c&logo=github)](
   https://github.com/SpiderLabs/owasp-modsecurity-crs/tree/v3.1/dev/util/docker)
 
-Usage
------
+## Usage
 
 How to use the image.
 
@@ -42,80 +39,84 @@ There are a variety of environment variables available to configure the image.
 *Most important are the following ones:*
 
 * PARANOIA_LEVEL (Default: 1)
-  - Ranging from 1-4. Have a look at the section *'What are paranoia levels, and
+  * Ranging from 1-4. Have a look at the section *'What are paranoia levels, and
     which level should I choose?'* at [coreruleset.org/faq/](https://coreruleset.org/faq/).
 * I_ANOMALY_SCORE_TH (Default: 1000)
-  - inbound anomaly score threshold; start with 1000 and try to bring it down to 5
+  * inbound anomaly score threshold; start with 1000 and try to bring it down to 5
 * O_ANOMALY_SCORE_TH (Default: 1000)
-  - outbound anomaly score threshold; start with 1000 and try to bring it down to 4
+  * outbound anomaly score threshold; start with 1000 and try to bring it down to 4
 * PORT (Default: 8080)
-  - Port the Apache process should listen on
+  * Port the Apache process should listen on
 * BACKEND
-  - The IP/URL of the service which should be secured by ModSecurity.
+  * The IP/URL of the service which should be secured by ModSecurity.
 
 #### ModSecurity
 
 * RULE_ENGINE
-  - `SecRuleEngine`
+  * `SecRuleEngine`
 * REQ_BODY_ACCESS
-  - `SecRequestBodyAccess`
+  * `SecRequestBodyAccess`
 * RESP_BODY_ACCESS
-  - `SecResponseBodyAccess`
+  * `SecResponseBodyAccess`
 * REQ_BODY_LIMIT
-  - `SecResponseBodyLimit`
+  * `SecResponseBodyLimit`
 * RESP_BODY_LIMIT
-  - `SecRequestBodyLimit`
+  * `SecRequestBodyLimit`
 * REQ_BODY_NOFILES_LIMIT
-  - `SecRequestBodyNoFilesLimit`
+  * `SecRequestBodyNoFilesLimit`
 * PCRE_MATCH_LIMIT
-  - `SecPcreMatchLimit`
+  * `SecPcreMatchLimit`
 * PCRE_MATCH_LIMIT_RECURSION
-  - `SecPcreMatchLimitRecursion`
+  * `SecPcreMatchLimitRecursion`
 * MODSEC_TAG
-  - `SecDefaultAction` tag
+  * `SecDefaultAction` tag
 * MODSEC_ALLOWED_METHODS
-  - `tx.allowed_methods`
+  * `tx.allowed_methods`
 * MODSEC_ALLOWED_CONTENT
-  - `tx.allowed_request_content_type`
+  * `tx.allowed_request_content_type`
 * MODSEC_ARG_NAME_LENGTH
-  - `tx.arg_name_length`
+  * `tx.arg_name_length`
 * MODSEC_MAX_NUM_ARGS
-  - `tx.max_num_args`
+  * `tx.max_num_args`
 * MODSEC_MAX_FILE_SIZE
-  - `tx.max_file_size`
+  * `tx.max_file_size`
 * MODSEC_MAX_COMBINED_SIZE
-  - `tx.combined_file_sizes`
+  * `tx.combined_file_sizes`
 * MODSEC_DEBUG_LOG
-  - `SecDebugLog`
+  * `SecDebugLog`
 * MODSEC_DEBUG_LOGLEVEL
-  - `SecDebugLogLevel`
+  * `SecDebugLogLevel`
 
 For the default values look at the `Dockerfile`.
 
 #### Apache
 
 * APACHE_RUN_USER
-  - system user the Apache process should use
+  * system user the Apache process should use
 * APACHE_RUN_GROUP
-  - system group the Apache process should use
+  * system group the Apache process should use
 * HTTPD_MAX_REQUEST_WORKERS
-  - `MaxRequestWorkers` (in mpm_event module configuration)
+  * `MaxRequestWorkers` (in mpm_event module configuration)
 * SERVER_NAME
-  - `ServerName` (in default site)
+  * `ServerName` (in default site)
 * SERVER_ADMIN
-  - `ServerAdmin` (in default site)
+  * `ServerAdmin` (in default site)
 * APACHE_LOGLEVEL
-  - `LogLevel` (in default site)
+  * `LogLevel` (in default site)
 * APACHE_ERRORLOG
-  - `ErrorLog` (in default site)
+  * `ErrorLog` (in default site)
 * APACHE_ACCESSLOG
-  - `CustomLog` (in default site)
+  * `CustomLog` (in default site)
 * APACHE_PERFLOG
-  - `CustomLog` (in default site)
+  * `CustomLog` (in default site)
+* REMOTEIP_INT_PROXY
+  * `RemoteIPInternalProxy` (in default site)
+* REQ_HEADER_FORWARDED_PROTO
+  * `X-Forwarded-Proto` RequestHeader (in default site)
 * APACHE_TIMEOUT
-  - `Timeout` (in Apache configuration)
+  * `Timeout` (in Apache configuration)
 * PROXY_TIMEOUT
-  - `ProxyTimeout` (in default site)
+  * `ProxyTimeout` (in default site)
 
 For the default values look at the `Dockerfile`.
 
@@ -134,9 +135,9 @@ You should mount `/var/log/modsecurity` onto a persistent volume.
 Configured directories and files are:
 
 * MODSEC_AUDIT_LOG (Default: `/var/log/modsecurity/audit.log`)
-  - `SecAuditLog`
+  * `SecAuditLog`
 * MODSEC_AUDIT_STORAGE (Default: `/var/log/modsecurity/audit`)
-  - `SecAuditLogStorageDir`
+  * `SecAuditLogStorageDir`
 
 #### Ephemeral
 
@@ -144,17 +145,17 @@ Following the 12-factor app guidelines we're logging error and access
 logs to the console, and let the cluster's ELK stack deal with logging:
 
 * ErrorLog (Default: `/dev/stderr`)
-  - *see* APACHE_ERRORLOG
+  * *see* APACHE_ERRORLOG
 * CustomLog (Default: `/dev/stdout`)
-  - *see* APACHE_ACCESSLOG
-  - *see* APACHE_PERFLOG
+  * *see* APACHE_ACCESSLOG
+  * *see* APACHE_PERFLOG
 
 You should mount `/tmp/modsecurity` onto a scratch space, such as an
 `emptyDir` volume. Configured settings are:
 
-* MODSEC_DATA_DIR (Default: `/tmp/modsecurity`)
-  - `SecDataDir`
-* MODSEC_TMP_DIR (Default: `/tmp/modsecurity`)
-  - `SecTmpDir`
-* MODSEC_UPLOAD_DIR (Default: `/tmp/modsecurity`)
-  - `SecUploadDir`
+* MODSEC_DATA_DIR (Default: `/tmp/modsecurity/data`)
+  * `SecDataDir`
+* MODSEC_TMP_DIR (Default: `/tmp/modsecurity/tmp`)
+  * `SecTmpDir`
+* MODSEC_UPLOAD_DIR (Default: `/tmp/modsecurity/upload`)
+  * `SecUploadDir`

@@ -79,3 +79,6 @@ RUN mkdir -p \
     /var/log \
     /var/run \
     /var/www/html
+
+COPY entrypoint.sh /entrypoint.sh
+ENTRYPOINT [ "/entrypoint.sh" ]

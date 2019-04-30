@@ -7,9 +7,9 @@
 ) [![GitHub PRs](https://img.shields.io/github/issues-pr-raw/vshn/modsecurity-docker.svg)](https://github.com/vshn/modsecurity-docker/pulls
 ) [![License](https://img.shields.io/github/license/vshn/modsecurity-docker.svg)](https://github.com/vshn/modsecurity-docker/blob/master/LICENSE)
 
-This image is based on the official [`owasp/modsecurity-crs`](https://hub.docker.com/r/owasp/modsecurity-crs) image.
+Based on the official [`owasp/modsecurity-crs`](https://hub.docker.com/r/owasp/modsecurity-crs) image.
 
-It contains the necessary tweaks to run on OpenShift.
+Contains the necessary tweaks to run on OpenShift.
 
 ## Supported Tags
 
@@ -19,18 +19,39 @@ It contains the necessary tweaks to run on OpenShift.
   https://images.microbadger.com/badges/image/vshn/modsecurity:latest.svg)](
   https://microbadger.com/images/vshn/modsecurity:latest) [![based on](
   https://img.shields.io/badge/Git-master-grey.svg?colorA=5a5b5c&colorB=9a9b9c&logo=github)](
-  https://github.com/SpiderLabs/owasp-modsecurity-crs/tree/v3.1/dev/util/docker)
+  https://github.com/SpiderLabs/owasp-modsecurity-crs/tree/v3.1/dev/util/docker) (v3.1)
 * [![3.1](
   https://img.shields.io/badge/3.1-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](
   https://github.com/vshn/modsecurity-docker/blob/master/v3.1/Dockerfile) [![size/layers](
   https://images.microbadger.com/badges/image/vshn/modsecurity:3.1.svg)](
   https://microbadger.com/images/vshn/modsecurity:3.1) [![based on](
   https://img.shields.io/badge/Git-master-grey.svg?colorA=5a5b5c&colorB=9a9b9c&logo=github)](
-  https://github.com/SpiderLabs/owasp-modsecurity-crs/tree/v3.1/dev/util/docker)
+  https://github.com/SpiderLabs/owasp-modsecurity-crs/tree/v3.1/dev/util/docker) (ModSecurity 2, CRS v3.1)
 
 ## Usage
 
-How to use the image.
+Ad-hoc usage and debugging:
+
+```console
+$ docker run -p 80:80 -it -e PARANOIA=4 --rm vshn/modsecurity bash
+```
+
+With a Dockerfile:
+
+```Dockerfile
+FROM vshn/modsecurity:3.1
+
+ENV PARANOIA=1 \
+    ANOMALY_INBOUND=500 \
+    ANOMALY_OUTBOUND=400 \
+    PORT=8000 \
+    BACKEND=http://facade-svc:9000
+
+VOLUME /opt/modsecurity/rules/before-crs
+VOLUME /opt/modsecurity/rules/after-crs
+VOLUME /var/log/modsecurity
+VOLUME /tmp/modsecurity
+```
 
 ### Configuration
 
@@ -38,12 +59,12 @@ There are a variety of environment variables available to configure the image.
 
 *Most important are the following ones:*
 
-* PARANOIA_LEVEL (Default: 1)
+* PARANOIA (Default: 1)
   * Ranging from 1-4. Have a look at the section *'What are paranoia levels, and
     which level should I choose?'* at [coreruleset.org/faq/](https://coreruleset.org/faq/).
-* I_ANOMALY_SCORE_TH (Default: 1000)
+* ANOMALY_INBOUND (Default: 1000)
   * inbound anomaly score threshold; start with 1000 and try to bring it down to 5
-* O_ANOMALY_SCORE_TH (Default: 1000)
+* ANOMALY_OUTBOUND (Default: 1000)
   * outbound anomaly score threshold; start with 1000 and try to bring it down to 4
 * PORT (Default: 8080)
   * Port the Apache process should listen on

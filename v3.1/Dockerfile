@@ -81,4 +81,6 @@ RUN mkdir -p \
     /var/www/html
 
 COPY entrypoint.sh /entrypoint.sh
+
 ENTRYPOINT [ "/entrypoint.sh" ]
+CMD ["apachectl", "-D", "FOREGROUND"]

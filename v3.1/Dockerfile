@@ -8,7 +8,7 @@ ENV APACHE_RUN_USER=www-data \
     BACKEND=http://localhost:8080 \
     APACHE_TIMEOUT=5 \
     APACHE_LOGLEVEL=notice \
-    APACHE_ERRORLOG=/dev/stderr \
+    APACHE_ERRORLOG='"|/usr/bin/stdbuf -i 0 -o 0 /opt/transform-alert-message.awk"' \
     APACHE_ACCESSLOG="/dev/stdout extendedjson" \
     APACHE_PERFLOG="/dev/stdout perflogjson env=write_perflog" \
     MODSEC_AUDIT_LOG=/var/log/modsecurity/audit.log \
@@ -47,6 +47,7 @@ COPY conf-available /etc/apache2/conf-available
 COPY modsecurity.d /etc/apache2/modsecurity.d
 COPY custom-rules/before-crs.dist /opt/modsecurity/rules/before-crs.dist
 COPY custom-rules/after-crs.dist /opt/modsecurity/rules/after-crs.dist
+COPY transform-alert-message.awk /opt/
 
 # fix hack of upstream image, enable confs and modules
 RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \

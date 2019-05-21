@@ -54,7 +54,9 @@ RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
  && sed -i 's/^Timeout 300$/Timeout ${APACHE_TIMEOUT}/' /etc/apache2/apache2.conf \
  && sed -i 's/MaxRequestWorkers .*/MaxRequestWorkers ${HTTPD_MAX_REQUEST_WORKERS}/' /etc/apache2/mods-available/mpm_event.conf \
  && a2enconf logging security \
- && a2enmod headers remoteip rewrite
+ && a2enmod headers remoteip rewrite \
+ && apt-get update \
+ && apt-get install -y gawk
 
 RUN mkdir -p \
     /opt/modsecurity/rules/after-crs \

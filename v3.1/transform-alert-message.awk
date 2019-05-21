@@ -1,4 +1,4 @@
-#!/usr/bin/awk -f
+#!/usr/bin/gawk -f
 #
 # Script to transform ModSecurity alert messages into JSON format.
 # Copyright 2017, Christian Folini

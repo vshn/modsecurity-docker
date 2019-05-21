@@ -8,7 +8,7 @@ ENV APACHE_RUN_USER=www-data \
     BACKEND=http://localhost:8080 \
     APACHE_TIMEOUT=5 \
     APACHE_LOGLEVEL=notice \
-    APACHE_ERRORLOG='"|/usr/bin/stdbuf -i 0 -o 0 /opt/transform-alert-message.awk"' \
+    APACHE_ERRORLOG="|/usr/bin/stdbuf -i0 -o0 /opt/transform-alert-message.awk" \
     APACHE_ACCESSLOG="/dev/stdout extendedjson" \
     APACHE_PERFLOG="/dev/stdout perflogjson env=write_perflog" \
     MODSEC_AUDIT_LOG=/var/log/modsecurity/audit.log \

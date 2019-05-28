@@ -1,4 +1,4 @@
-FROM owasp/modsecurity-crs:v3.1
+FROM vshn/modsecurity-crs:v3.1
 
 ENV APACHE_RUN_USER=www-data \
     APACHE_RUN_GROUP=root \

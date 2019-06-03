@@ -165,9 +165,9 @@ Configured directories and files are:
 Following the 12-factor app guidelines we're logging error and access
 logs to the console, and let the cluster's ELK stack deal with logging:
 
-* ErrorLog (Default: `/dev/stderr`)
+* ErrorLog (Default: JSON to stdout)
   * *see* APACHE_ERRORLOG
-* CustomLog (Default: `/dev/stdout`)
+* CustomLog (Default: JSON to stdout)
   * *see* APACHE_ACCESSLOG
   * *see* APACHE_PERFLOG
 

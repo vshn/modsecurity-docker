@@ -68,6 +68,7 @@ RUN mkdir -p \
     /var/log/modsecurity/audit \
  && chgrp -R 0 \
     /etc/apache2 \
+    /etc/modsecurity.d \
     /opt/modsecurity \
     /tmp/modsecurity \
     /var/lock/apache2 \
@@ -76,6 +77,7 @@ RUN mkdir -p \
     /var/www/html \
  && chmod -R g=u \
     /etc/apache2 \
+    /etc/modsecurity.d \
     /opt/modsecurity \
     /tmp/modsecurity \
     /var/lock/apache2 \

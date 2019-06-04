@@ -53,6 +53,8 @@ COPY transform-alert-message.awk /opt/
 RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
  && sed -i 's/^Timeout 300$/Timeout ${APACHE_TIMEOUT}/' /etc/apache2/apache2.conf \
  && sed -i 's/MaxRequestWorkers .*/MaxRequestWorkers ${HTTPD_MAX_REQUEST_WORKERS}/' /etc/apache2/mods-available/mpm_event.conf \
+ && ln -sfv /dev/stdout /var/log/apache2/access.log \
+ && ln -sfv /dev/stderr /var/log/apache2/error.log \
  && a2enconf logging security \
  && a2enmod headers remoteip rewrite \
  && apt-get update \

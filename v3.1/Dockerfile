@@ -9,8 +9,8 @@ ENV APACHE_RUN_USER=www-data \
     APACHE_TIMEOUT=5 \
     APACHE_LOGLEVEL=notice \
     APACHE_ERRORLOG='"|/usr/bin/stdbuf -i0 -o0 /opt/transform-alert-message.awk"' \
-    APACHE_ACCESSLOG="/dev/stdout extendedjson" \
-    APACHE_PERFLOG="/dev/stdout perflogjson env=write_perflog" \
+    APACHE_ACCESSLOG='/dev/stdout extendedjson' \
+    APACHE_PERFLOG='/dev/stdout perflogjson env=write_perflog' \
     MODSEC_AUDIT_LOG=/var/log/modsecurity/audit.log \
     MODSEC_AUDIT_STORAGE=/var/log/modsecurity/audit/ \
     MODSEC_DEBUG_LOG=/dev/null \

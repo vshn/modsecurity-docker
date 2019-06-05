@@ -51,8 +51,12 @@ COPY transform-alert-message.awk /opt/
 
 # fix hack of upstream image, enable confs and modules
 RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
- && sed -i 's/^Timeout 300$/Timeout ${APACHE_TIMEOUT}/' /etc/apache2/apache2.conf \
- && sed -i 's/MaxRequestWorkers .*/MaxRequestWorkers ${HTTPD_MAX_REQUEST_WORKERS}/' /etc/apache2/mods-available/mpm_event.conf \
+ && sed -i /etc/apache2/apache2.conf \
+   -e 's/^LogLevel .*$/LogLevel ${APACHE_LOGLEVEL}/' \
+   -e 's/^ErrorLog .*$/ErrorLog ${APACHE_ERRORLOG}/' \
+   -e 's/^Timeout 300$/Timeout ${APACHE_TIMEOUT}/' \
+ && sed -i /etc/apache2/mods-available/mpm_event.conf \
+   -e 's/MaxRequestWorkers .*/MaxRequestWorkers ${HTTPD_MAX_REQUEST_WORKERS}/' \
  && ln -sfv /dev/stdout /var/log/apache2/access.log \
  && ln -sfv /dev/stderr /var/log/apache2/error.log \
  && a2enconf logging security \

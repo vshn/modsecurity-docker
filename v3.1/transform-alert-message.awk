@@ -271,7 +271,6 @@ BEGIN {
 		print json_out
 
 	}
-
 }
 
 END {

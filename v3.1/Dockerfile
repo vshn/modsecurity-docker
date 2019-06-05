@@ -53,7 +53,7 @@ COPY transform-alert-message.awk /opt/
 RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
  && sed -i /etc/apache2/apache2.conf \
    -e 's/^LogLevel .*$/LogLevel ${APACHE_LOGLEVEL}/' \
-   -e 's/^ErrorLog .*$/ErrorLog ${APACHE_ERRORLOG}/' \
+   -e 's#^ErrorLog .*$#ErrorLog "|/usr/bin/stdbuf -i0 -o0 /opt/transform-alert-message.awk"#' \
    -e 's/^Timeout 300$/Timeout ${APACHE_TIMEOUT}/' \
  && sed -i /etc/apache2/mods-available/mpm_event.conf \
    -e 's/MaxRequestWorkers .*/MaxRequestWorkers ${HTTPD_MAX_REQUEST_WORKERS}/' \

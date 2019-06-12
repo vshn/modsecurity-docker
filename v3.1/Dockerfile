@@ -57,8 +57,6 @@ RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
    -e 's/^Timeout 300$/Timeout ${APACHE_TIMEOUT}/' \
  && sed -i /etc/apache2/mods-available/mpm_event.conf \
    -e 's/MaxRequestWorkers .*/MaxRequestWorkers ${HTTPD_MAX_REQUEST_WORKERS}/' \
- && ln -sfv /dev/stdout /var/log/apache2/access.log \
- && ln -sfv /dev/stderr /var/log/apache2/error.log \
  && a2enconf logging security \
  && a2enmod headers remoteip rewrite \
  && apt-get update \

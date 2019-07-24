@@ -11,6 +11,7 @@ ENV APACHE_RUN_USER=www-data \
     APACHE_ERRORLOG='"|/usr/bin/stdbuf -i0 -o0 /opt/transform-alert-message.awk"' \
     APACHE_ACCESSLOG='/dev/stdout extendedjson' \
     APACHE_PERFLOG='/dev/stdout perflogjson env=write_perflog' \
+    APACHE_METRICSLOG='/dev/null combined' \
     MODSEC_AUDIT_LOG=/var/log/modsecurity/audit.log \
     MODSEC_AUDIT_STORAGE=/var/log/modsecurity/audit/ \
     MODSEC_DEBUG_LOG=/dev/null \

@@ -12,6 +12,8 @@ ENV APACHE_RUN_USER=www-data \
     APACHE_ACCESSLOG='/dev/stdout extendedjson' \
     APACHE_PERFLOG='/dev/stdout perflogjson env=write_perflog' \
     APACHE_METRICSLOG='/dev/null combined' \
+    APACHE_METRICS_DENY_FROM='All' \
+    APACHE_METRICS_ALLOW_FROM='127.0.0.0/255.0.0.0 ::1/128' \
     MODSEC_AUDIT_LOG=/var/log/modsecurity/audit.log \
     MODSEC_AUDIT_STORAGE=/var/log/modsecurity/audit/ \
     MODSEC_DEBUG_LOG=/dev/null \

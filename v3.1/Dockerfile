@@ -67,6 +67,11 @@ RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
  && apt-get update \
  && apt-get install -y gawk
 
+RUN apt-get install -y wget \
+ && wget -O- https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz \
+    | gunzip > /opt/owasp-modsecurity-crs/util/geo-location/GeoIP.dat \
+ && apt-get purge -y wget
+
 RUN mkdir -p \
     /opt/modsecurity/rules/after-crs \
     /opt/modsecurity/rules/before-crs \

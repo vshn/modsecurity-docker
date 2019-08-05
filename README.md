@@ -11,6 +11,9 @@ Based on the official [`owasp/modsecurity-crs`](https://hub.docker.com/r/owasp/m
 
 Contains the necessary tweaks to run on OpenShift.
 
+This image uses the [GeoLite2 Country Database](https://dev.maxmind.com/geoip/geoip2/geolite2/)
+provided by MaxMind under the [CC BY-SA 4.0 license](https://creativecommons.org/licenses/by-sa/4.0/).
+
 ## Supported Tags
 
 * [![latest](

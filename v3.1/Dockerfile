@@ -67,10 +67,20 @@ RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
  && apt-get update \
  && apt-get install -y gawk
 
-RUN apt-get install -y wget \
- && wget -O- https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz \
-    | gunzip > /opt/owasp-modsecurity-crs/util/geo-location/GeoIP.dat \
- && apt-get purge -y wget
+RUN mkdir /tmp/geoip \
+ && cd /tmp/geoip \
+ && apt-get install -y curl geoip-bin python-pip \
+ && python -m pip install ipaddr pygeoip \
+ && curl -s -o geoip-convert https://raw.githubusercontent.com/emphazer/GeoIP_convert-v2-v1/master/geoip_convert-v2-v1.sh \
+ && chmod +x geoip-convert \
+ && echo 'Converting GeoLite2 databases to legacy format ...' \
+ && ./geoip-convert \
+ && mv -v */GeoIP_country.dat /opt/owasp-modsecurity-crs/util/geo-location/ \
+ && python -m pip uninstall -y ipaddr pygeoip \
+ && apt-get purge -y curl geoip-bin python-pip \
+ && apt-get autoremove --purge -y \
+ && apt-get clean \
+ && rm -rf /tmp/geoip
 
 RUN mkdir -p \
     /opt/modsecurity/rules/after-crs \

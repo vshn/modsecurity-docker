@@ -166,7 +166,7 @@ Configured directories and files are:
 #### Ephemeral
 
 Following the 12-factor app guidelines we're logging error and access
-logs to the console, and let the cluster's ELK stack deal with logging:
+logs to the console, and let the cluster's logging stack deal with logging:
 
 * ErrorLog (Default: JSON to stdout)
   * *see* APACHE_ERRORLOG

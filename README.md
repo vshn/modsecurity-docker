@@ -144,6 +144,12 @@ For the default values look at the `Dockerfile`.
 
 For the default values look at the `Dockerfile`.
 
+### CLAMAV
+* CLAMD_SERVER (Default: 127.0.0.1)
+  * host/ip of server running clamd
+* CLAMD_PORT (Default: 3310)
+  * port on which clamd is listening
+
 ### Custom rules
 
 Mount your custom rules at `/opt/modsecurity/rules/before-crs/` to load them

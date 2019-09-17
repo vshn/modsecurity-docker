@@ -42,7 +42,9 @@ ENV APACHE_RUN_USER=www-data \
     PARANOIA=1 \
     ANOMALY_INBOUND=1000 \
     ANOMALY_OUTBOUND=1000 \
-    HTTPD_MAX_REQUEST_WORKERS=250
+    HTTPD_MAX_REQUEST_WORKERS=250 \
+    CLAMD_SERVER=127.0.0.1 \
+    CLAMD_PORT=3310
 
 COPY ports.conf /etc/apache2/
 COPY sites-available /etc/apache2/sites-available
@@ -50,9 +52,9 @@ COPY conf-available /etc/apache2/conf-available
 COPY modsecurity.d /etc/apache2/modsecurity.d
 COPY custom-rules/before-crs.dist /opt/modsecurity/rules/before-crs.dist
 COPY custom-rules/after-crs.dist /opt/modsecurity/rules/after-crs.dist
-COPY transform-alert-message.awk /opt/
+COPY transform-alert-message.awk virus-check.pl /opt/
 
-# fix hack of upstream image, enable confs and modules
+# fix hack of upstream image, enable confs and modules, install clamdscan
 RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
  && sed -i /etc/apache2/apache2.conf \
    -e 's/^LogLevel .*$/LogLevel ${APACHE_LOGLEVEL}/' \
@@ -65,7 +67,9 @@ RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
  && a2enconf logging security \
  && a2enmod headers remoteip rewrite \
  && apt-get update \
- && apt-get install -y gawk
+ && apt-get install -y gawk clamdscan gettext-base
+
+COPY clamd.conf.template /etc/clamav/
 
 RUN mkdir /tmp/geoip \
  && cd /tmp/geoip \
@@ -101,6 +105,7 @@ RUN mkdir -p \
     /var/www/html \
  && chmod -R g=u \
     /etc/apache2 \
+    /etc/clamav \
     /etc/modsecurity.d \
     /opt/modsecurity \
     /tmp/modsecurity \

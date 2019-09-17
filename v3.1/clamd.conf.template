@@ -1,0 +1,5 @@
+LogFile /dev/stdout
+LogTime yes
+
+TCPSocket ${CLAMD_PORT}
+TCPAddr ${CLAMD_SERVER}

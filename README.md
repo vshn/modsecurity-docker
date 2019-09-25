@@ -73,6 +73,8 @@ There are a variety of environment variables available to configure the image.
   * Port the Apache process should listen on
 * BACKEND
   * The IP/URL of the service which should be secured by ModSecurity.
+* BACKEND_WS
+  * The IP/URL of the WebSocket service (if used)
 
 #### ModSecurity
 

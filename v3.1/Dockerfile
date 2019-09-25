@@ -6,6 +6,7 @@ ENV APACHE_RUN_USER=www-data \
     SERVER_NAME=localhost \
     PORT=8080 \
     BACKEND=http://localhost:8080 \
+    BACKEND_WS=ws://localhost:8080 \
     APACHE_TIMEOUT=5 \
     APACHE_LOGLEVEL=notice \
     APACHE_ERRORLOG='"|/usr/bin/stdbuf -i0 -o0 /opt/transform-alert-message.awk"' \

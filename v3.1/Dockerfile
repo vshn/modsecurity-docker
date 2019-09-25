@@ -39,6 +39,8 @@ ENV APACHE_RUN_USER=www-data \
     RESP_BODY_LIMIT=500000000 \
     PCRE_MATCH_LIMIT=500000 \
     PCRE_MATCH_LIMIT_RECURSION=500000 \
+    PROXY_SSL=off \
+    PROXY_SSL_CA_CERT=/etc/ssl/certs/ca-certificates.crt \
     PROXY_TIMEOUT=42 \
     PARANOIA=1 \
     ANOMALY_INBOUND=1000 \
@@ -69,7 +71,8 @@ RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
  && a2enmod \
       headers \
       remoteip \
-      rewrite
+      rewrite \
+      ssl
 
 COPY clamd.conf.template /etc/clamav/
 

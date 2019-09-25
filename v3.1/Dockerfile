@@ -65,16 +65,27 @@ RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
  && ln -sfv /dev/stdout /var/log/apache2/access.log \
  && ln -sfv /dev/stderr /var/log/apache2/error.log \
  && a2enconf logging security \
- && a2enmod headers remoteip rewrite \
- && apt-get update \
- && apt-get install -y gawk clamdscan gettext-base
+ && a2enmod \
+      headers \
+      remoteip \
+      rewrite
 
 COPY clamd.conf.template /etc/clamav/
 
 RUN mkdir /tmp/geoip \
  && cd /tmp/geoip \
- && apt-get install -y curl geoip-bin python-pip \
- && python -m pip install ipaddr pygeoip \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends \
+      clamdscan \
+      curl \
+      gawk \
+      geoip-bin \
+      gettext-base \
+      python-pip \
+      python-setuptools \
+ && python -m pip install --no-cache-dir \
+      ipaddr \
+      pygeoip \
  && curl -s -o geoip-convert https://raw.githubusercontent.com/emphazer/GeoIP_convert-v2-v1/master/geoip_convert-v2-v1.sh \
  && chmod +x geoip-convert \
  && echo 'Converting GeoLite2 databases to legacy format ...' \
@@ -84,7 +95,7 @@ RUN mkdir /tmp/geoip \
  && apt-get purge -y curl geoip-bin python-pip \
  && apt-get autoremove --purge -y \
  && apt-get clean \
- && rm -rf /tmp/geoip
+ && rm -rf /tmp/geoip /var/lib/apt/lists/*
 
 RUN mkdir -p \
     /opt/modsecurity/rules/after-crs \

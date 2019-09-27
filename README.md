@@ -62,14 +62,14 @@ There are a variety of environment variables available to configure the image.
 
 *Most important are the following ones:*
 
-* PARANOIA (Default: 1)
+* PARANOIA (Default: `1`)
   * Ranging from 1-4. Have a look at the section *'What are paranoia levels, and
     which level should I choose?'* at [coreruleset.org/faq/](https://coreruleset.org/faq/).
-* ANOMALY_INBOUND (Default: 1000)
+* ANOMALY_INBOUND (Default: `100`)
   * inbound anomaly score threshold; start with 1000 and try to bring it down to 5
-* ANOMALY_OUTBOUND (Default: 1000)
+* ANOMALY_OUTBOUND (Default: `1000`)
   * outbound anomaly score threshold; start with 1000 and try to bring it down to 4
-* PORT (Default: 8080)
+* PORT (Default: `8080`)
   * Port the Apache process should listen on
 * BACKEND
   * The IP/URL of the service which should be secured by ModSecurity.
@@ -141,21 +141,21 @@ For the default values look at the `Dockerfile`.
   * `X-Forwarded-Proto` RequestHeader (in default site)
 * APACHE_TIMEOUT
   * `Timeout` (in Apache configuration)
-* PROXY_PRESERVE_HOST
-  * `ProxyPreserveHost` default `on` (in default site)
-* PROXY_SSL
-  * `SSLProxyEngine`, can be `on` or `off`, default `off` (in default site). `PROXY_PRESERVE_HOST` should be turned `off` to validate backend certificates correctly.
-* PROXY_SSL_CA_CERT
-  * `SSLProxyCACertificateFile` default `/etc/ssl/certs/ca-certificates.crt` (in default site)
+* PROXY_PRESERVE_HOST (Default: `on`)
+  * `ProxyPreserveHost` (in default site)
+* PROXY_SSL (Default: `off`)
+  * `SSLProxyEngine`, can be `on` or `off` (in default site). `PROXY_PRESERVE_HOST` should be turned `off` to validate backend certificates correctly.
+* PROXY_SSL_CA_CERT (Default: `/etc/ssl/certs/ca-certificates.crt`)
+  * `SSLProxyCACertificateFile` (in default site)
 * PROXY_TIMEOUT
   * `ProxyTimeout` (in default site)
 
 For the default values look at the `Dockerfile`.
 
 ### CLAMAV
-* CLAMD_SERVER (Default: 127.0.0.1)
+* CLAMD_SERVER (Default: `127.0.0.1`)
   * host/ip of server running clamd
-* CLAMD_PORT (Default: 3310)
+* CLAMD_PORT (Default: `3310`)
   * port on which clamd is listening
 
 ### Custom rules

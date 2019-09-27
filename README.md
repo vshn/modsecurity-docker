@@ -141,8 +141,10 @@ For the default values look at the `Dockerfile`.
   * `X-Forwarded-Proto` RequestHeader (in default site)
 * APACHE_TIMEOUT
   * `Timeout` (in Apache configuration)
+* PROXY_PRESERVE_HOST
+  * `ProxyPreserveHost` default `on` (in default site)
 * PROXY_SSL
-  * `SSLProxyEngine`, can be `on` or `off`, default `off` (in default site)
+  * `SSLProxyEngine`, can be `on` or `off`, default `off` (in default site). `PROXY_PRESERVE_HOST` should be turned `off` to validate backend certificates correctly.
 * PROXY_SSL_CA_CERT
   * `SSLProxyCACertificateFile` default `/etc/ssl/certs/ca-certificates.crt` (in default site)
 * PROXY_TIMEOUT

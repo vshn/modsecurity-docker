@@ -71,6 +71,7 @@ RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
  && a2enconf logging security \
  && a2enmod \
       headers \
+      proxy_wstunnel \
       remoteip \
       rewrite \
       ssl

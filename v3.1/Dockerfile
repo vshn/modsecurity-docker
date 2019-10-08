@@ -97,8 +97,13 @@ RUN mkdir /tmp/geoip \
  && echo 'Converting GeoLite2 databases to legacy format ...' \
  && ./geoip-convert \
  && mv -v */GeoIP_country.dat /opt/owasp-modsecurity-crs/util/geo-location/ \
- && python -m pip uninstall -y ipaddr pygeoip \
- && apt-get purge -y curl geoip-bin python-pip \
+ && python -m pip uninstall -y \
+     ipaddr \
+     pygeoip \
+ && apt-get purge -y \
+     curl \
+     geoip-bin \
+     python-pip \
  && apt-get autoremove --purge -y \
  && apt-get clean \
  && rm -rf /tmp/geoip /var/lib/apt/lists/*

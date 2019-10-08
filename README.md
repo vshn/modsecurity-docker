@@ -9,10 +9,11 @@
 
 Based on the official [`owasp/modsecurity-crs`](https://hub.docker.com/r/owasp/modsecurity-crs) image.
 
-Contains the necessary tweaks to run on OpenShift.
-
-This image uses the [GeoLite2 Country Database](https://dev.maxmind.com/geoip/geoip2/geolite2/)
-provided by MaxMind under the [CC BY-SA 4.0 license](https://creativecommons.org/licenses/by-sa/4.0/).
+* Contains the necessary tweaks to run on [OpenShift](https://www.openshift.com/).
+* Uses the [GeoLite2 Country Database](https://dev.maxmind.com/geoip/geoip2/geolite2/) provided
+  by MaxMind under the [CC BY-SA 4.0 license](https://creativecommons.org/licenses/by-sa/4.0/).
+* Includes [ClamAV anti-virus scanner](https://www.clamav.net/) provided by Cisco-TALOS under the
+  [GPL v2 (or later) license](https://github.com/Cisco-Talos/clamav-devel/blob/master/COPYING).
 
 ## Supported Tags
 
@@ -152,7 +153,8 @@ For the default values look at the `Dockerfile`.
 
 For the default values look at the `Dockerfile`.
 
-### CLAMAV
+#### ClamAV Anti Virus
+
 * CLAMD_SERVER (Default: `127.0.0.1`)
   * host/ip of server running clamd
 * CLAMD_PORT (Default: `3310`)
@@ -197,3 +199,8 @@ You should mount `/tmp/modsecurity` onto a scratch space, such as an
   * `SecTmpDir`
 * MODSEC_UPLOAD_DIR (Default: `/tmp/modsecurity/upload`)
   * `SecUploadDir`
+
+## Credits
+
+This product includes GeoLite2 data created by MaxMind, available from
+[https://www.maxmind.com](https://www.maxmind.com).

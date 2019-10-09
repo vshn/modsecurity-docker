@@ -48,7 +48,8 @@ ENV APACHE_RUN_USER=www-data \
     ANOMALY_OUTBOUND=1000 \
     HTTPD_MAX_REQUEST_WORKERS=250 \
     CLAMD_SERVER=127.0.0.1 \
-    CLAMD_PORT=3310
+    CLAMD_PORT=3310 \
+    CLAMD_DEBUG_LOG=off
 
 COPY ports.conf /etc/apache2/
 COPY sites-available /etc/apache2/sites-available

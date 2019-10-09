@@ -159,6 +159,8 @@ For the default values look at the `Dockerfile`.
   * host/ip of server running clamd
 * CLAMD_PORT (Default: `3310`)
   * port on which clamd is listening
+* CLAMD_DEBUG_LOG (Default: `off`)
+  * whether ClamAV scanning should log debug messages
 
 ### Custom rules
 

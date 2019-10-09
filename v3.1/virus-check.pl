@@ -19,8 +19,8 @@ use strict;
 use warnings;
 use POSIX qw(strftime);
 
-my $do_log = 1;
-my $logfile = "/tmp/virus-check.log";
+my $do_log = $ENV{"CLAMD_DEBUG_LOG"} eq "on" ? 1 : 0;
+my $logfile = "/dev/stdout";
 
 my $BIN = "clamdscan";
 

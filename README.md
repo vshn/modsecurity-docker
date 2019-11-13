@@ -145,7 +145,11 @@ For the default values look at the `Dockerfile`.
 * PROXY_PRESERVE_HOST (Default: `on`)
   * `ProxyPreserveHost` (in default site)
 * PROXY_SSL (Default: `off`)
-  * `SSLProxyEngine`, can be `on` or `off` (in default site). `PROXY_PRESERVE_HOST` should be turned `off` to validate backend certificates correctly.
+  * `SSLProxyEngine`, can be `on` or `off` (in default site). `PROXY_PRESERVE_HOST` should be turned `off` to fully validate backend certificates (including host name).
+* PROXY_SSL_VERIFY (Default: `none`)
+  * `SSLProxyVerify`, specifies the level of certificate verification (`none`, `optional`, `require`, `optional_no_ca`).
+* PROXY_SSL_CHECK_PEER_NAME (Default: `on`)
+  * `SSLProxyCheckPeerName`, can be `on` or `off`. Wether the host name of the backend certificate should be checked or not. If `PROXY_PRESERVE_HOST` is `on`, this should be `off`.
 * PROXY_SSL_CA_CERT (Default: `/etc/ssl/certs/ca-certificates.crt`)
   * `SSLProxyCACertificateFile` (in default site)
 * PROXY_TIMEOUT

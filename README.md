@@ -206,6 +206,25 @@ You should mount `/tmp/modsecurity` onto a scratch space, such as an
 * MODSEC_UPLOAD_DIR (Default: `/tmp/modsecurity/upload`)
   * `SecUploadDir`
 
+## Local Testing
+
+Use Docker compose to start a ModSecurity and a httpbin container.
+```
+cd v3.1
+docker-compose up
+```
+
+When the containers are running, you can make requests like:
+```
+curl -i http://localhost:8080/anything
+
+curl -i -H 'Host: vshn.ch' https://httpbin.org/anything
+
+curl -i http://localhost:8081/cookies/set/secret/random-value
+```
+
+For all supported endpoints have a look at [httpbin.org](https://httpbin.org).
+
 ## Credits
 
 This product includes GeoLite2 data created by MaxMind, available from

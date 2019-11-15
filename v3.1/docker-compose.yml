@@ -4,6 +4,7 @@ services:
     build: .
     environment:
       BACKEND: http://backend
+      PARANOIA: 4
     ports:
     - "8080:8080"
     links:

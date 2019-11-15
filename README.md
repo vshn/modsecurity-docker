@@ -218,9 +218,9 @@ When the containers are running, you can make requests like:
 ```
 curl -i http://localhost:8080/anything
 
-curl -i -H 'Host: vshn.ch' https://httpbin.org/anything
+curl -i -H 'Host: vshn.ch' http://localhost:8080/anything
 
-curl -i http://localhost:8081/cookies/set/secret/random-value
+curl -i http://localhost:8080/cookies/set/secret/random-value
 ```
 
 For all supported endpoints have a look at [httpbin.org](https://httpbin.org).

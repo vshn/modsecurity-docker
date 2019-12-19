@@ -113,6 +113,14 @@ There are a variety of environment variables available to configure the image.
   * `SecDebugLog`
 * MODSEC_DEBUG_LOGLEVEL
   * `SecDebugLogLevel`
+* MODSEC_AUDIT_LOG_TYPE
+  * `SecAuditLogType`
+* MODSEC_AUDIT_LOG_FORMAT
+  * `SecAuditLogFormat`
+* MODSEC_AUDIT_LOG
+  * `SecAuditLog`
+* MODSEC_AUDIT_STORAGE
+  * `SecAuditLogStorageDir`
 
 For the default values look at the `Dockerfile`.
 
@@ -173,23 +181,13 @@ before the Core Rule Set and at `/opt/modsecurity/rules/after-crs/` to load
 after the CRS has been loaded. All custom rule files must end in `.conf` in
 order to be loaded.
 
-### Data
+### Logging
 
-#### Persistent
-
-You should mount `/var/log/modsecurity` onto a persistent volume.
-Configured directories and files are:
-
-* MODSEC_AUDIT_LOG (Default: `/var/log/modsecurity/audit.log`)
-  * `SecAuditLog`
-* MODSEC_AUDIT_STORAGE (Default: `/var/log/modsecurity/audit`)
-  * `SecAuditLogStorageDir`
-
-#### Ephemeral
-
-Following the 12-factor app guidelines we're logging error and access
+Following the 12-factor app guidelines we're logging audit, error and access
 logs to the console, and let the cluster's logging stack deal with logging:
 
+* Audit Log (Default: JSON to stdout)
+  * *see* MODSEC_AUDIT_LOG
 * ErrorLog (Default: JSON to stdout)
   * *see* APACHE_ERRORLOG
 * CustomLog (Default: JSON to stdout)

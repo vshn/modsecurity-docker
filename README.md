@@ -84,7 +84,7 @@ There are a variety of environment variables available to configure the image.
 * PARANOIA (Default: `1`)
   * Ranging from 1-4. Have a look at the section *'What are paranoia levels, and
     which level should I choose?'* at [coreruleset.org/faq/](https://coreruleset.org/faq/).
-* ANOMALY_INBOUND (Default: `100`)
+* ANOMALY_INBOUND (Default: `1000`)
   * inbound anomaly score threshold; start with 1000 and try to bring it down to 5
 * ANOMALY_OUTBOUND (Default: `1000`)
   * outbound anomaly score threshold; start with 1000 and try to bring it down to 4

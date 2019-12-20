@@ -192,17 +192,10 @@ For the default values look at the `Dockerfile`.
 * CLAMD_DEBUG_LOG (Default: `off`)
   * whether ClamAV scanning should log debug messages
 
-## Custom rules
-
-Mount your custom rules at `/opt/modsecurity/rules/before-crs/` to load them
-before the Core Rule Set and at `/opt/modsecurity/rules/after-crs/` to load
-after the CRS has been loaded. All custom rule files must end in `.conf` in
-order to be loaded.
-
-## Logging
+### Logging
 
 Following the 12-factor app guidelines we're logging audit, error and access
-logs to the console, and let the cluster's logging stack deal with logging:
+logs to the console, and let the cluster's logging stack deal with the output:
 
 * Audit Log (Default: JSON to stdout)
   * *see* MODSEC_AUDIT_LOG
@@ -221,6 +214,13 @@ You should mount `/tmp/modsecurity` onto a scratch space, such as an
   * `SecTmpDir`
 * MODSEC_UPLOAD_DIR (Default: `/tmp/modsecurity/upload`)
   * `SecUploadDir`
+
+## Custom rules
+
+Mount your custom rules at `/opt/modsecurity/rules/before-crs/` to load them
+before the Core Rule Set and at `/opt/modsecurity/rules/after-crs/` to load
+after the CRS has been loaded. All custom rule files must end in `.conf` in
+order to be loaded.
 
 ## Credits
 

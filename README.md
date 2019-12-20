@@ -57,7 +57,25 @@ VOLUME /var/log/modsecurity
 VOLUME /tmp/modsecurity
 ```
 
-### Configuration
+With Docker Compose to start a ModSecurity and a httpbin container:
+
+```console
+cd v3.1
+docker-compose up
+```
+
+When the containers are running, you can make requests like:
+```console
+curl -i http://localhost:8080/anything
+
+curl -i -H 'Host: vshn.ch' http://localhost:8080/anything
+
+curl -i http://localhost:8080/cookies/set/secret/random-value
+```
+
+For all supported endpoints have a look at [httpbin.org](https://httpbin.org).
+
+## Configuration
 
 There are a variety of environment variables available to configure the image.
 
@@ -77,7 +95,7 @@ There are a variety of environment variables available to configure the image.
 * BACKEND_WS
   * The IP/URL of the WebSocket service (if used)
 
-#### ModSecurity
+### ModSecurity
 
 * RULE_ENGINE
   * `SecRuleEngine`
@@ -124,7 +142,7 @@ There are a variety of environment variables available to configure the image.
 
 For the default values look at the `Dockerfile`.
 
-#### Apache
+### Apache
 
 * APACHE_RUN_USER
   * system user the Apache process should use
@@ -165,7 +183,7 @@ For the default values look at the `Dockerfile`.
 
 For the default values look at the `Dockerfile`.
 
-#### ClamAV Anti Virus
+### ClamAV Anti Virus
 
 * CLAMD_SERVER (Default: `127.0.0.1`)
   * host/ip of server running clamd
@@ -174,14 +192,14 @@ For the default values look at the `Dockerfile`.
 * CLAMD_DEBUG_LOG (Default: `off`)
   * whether ClamAV scanning should log debug messages
 
-### Custom rules
+## Custom rules
 
 Mount your custom rules at `/opt/modsecurity/rules/before-crs/` to load them
 before the Core Rule Set and at `/opt/modsecurity/rules/after-crs/` to load
 after the CRS has been loaded. All custom rule files must end in `.conf` in
 order to be loaded.
 
-### Logging
+## Logging
 
 Following the 12-factor app guidelines we're logging audit, error and access
 logs to the console, and let the cluster's logging stack deal with logging:
@@ -203,25 +221,6 @@ You should mount `/tmp/modsecurity` onto a scratch space, such as an
   * `SecTmpDir`
 * MODSEC_UPLOAD_DIR (Default: `/tmp/modsecurity/upload`)
   * `SecUploadDir`
-
-## Local Testing
-
-Use Docker compose to start a ModSecurity and a httpbin container.
-```
-cd v3.1
-docker-compose up
-```
-
-When the containers are running, you can make requests like:
-```
-curl -i http://localhost:8080/anything
-
-curl -i -H 'Host: vshn.ch' http://localhost:8080/anything
-
-curl -i http://localhost:8080/cookies/set/secret/random-value
-```
-
-For all supported endpoints have a look at [httpbin.org](https://httpbin.org).
 
 ## Credits
 

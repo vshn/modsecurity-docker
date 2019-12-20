@@ -217,10 +217,12 @@ You should mount `/tmp/modsecurity` onto a scratch space, such as an
 
 ## Custom rules
 
-Mount your custom rules at `/opt/modsecurity/rules/before-crs/` to load them
-before the Core Rule Set and at `/opt/modsecurity/rules/after-crs/` to load
-after the CRS has been loaded. All custom rule files must end in `.conf` in
-order to be loaded.
+Mount your custom rules
+
+* at `/opt/modsecurity/rules/before-crs/` to load them before the Core Rule Set and
+* at `/opt/modsecurity/rules/after-crs/` to load them after the CRS has been loaded.
+
+All custom rule files must end in `.conf` in order to be loaded.
 
 ## Credits
 

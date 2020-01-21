@@ -119,10 +119,12 @@ There are a variety of environment variables available to configure the image.
   * `tx.allowed_methods`
 * MODSEC_ALLOWED_CONTENT
   * `tx.allowed_request_content_type`
-* MODSEC_ARG_NAME_LENGTH
-  * `tx.arg_name_length`
 * MODSEC_MAX_NUM_ARGS
   * `tx.max_num_args`
+* MODSEC_ARG_NAME_LENGTH
+  * `tx.arg_name_length`
+* MODSEC_ARGS_COMBINED_SIZE
+  * `tx.total_arg_length`
 * MODSEC_MAX_FILE_SIZE
   * `tx.max_file_size`
 * MODSEC_MAX_COMBINED_SIZE

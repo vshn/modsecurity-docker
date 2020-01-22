@@ -64,7 +64,7 @@ COPY custom-rules/before-crs.dist /opt/modsecurity/rules/before-crs.dist
 COPY custom-rules/after-crs.dist /opt/modsecurity/rules/after-crs.dist
 COPY transform-alert-message.awk virus-check.pl /opt/
 
-# fix hack of upstream image, enable confs and modules, install clamdscan
+# fix hack of upstream image, enable confs and modules, reduce CRS setup to minumum
 RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
  && sed -i /etc/apache2/apache2.conf \
    -e 's/^LogLevel .*$/LogLevel ${APACHE_LOGLEVEL}/' \
@@ -80,7 +80,10 @@ RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
       proxy_wstunnel \
       remoteip \
       rewrite \
-      ssl
+      ssl \
+ && grep -B 15 setvar:tx.crs_setup_version \
+      /opt/owasp-modsecurity-crs/crs-setup.conf.example > \
+      /etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf
 
 COPY clamd.conf.template /etc/clamav/
 

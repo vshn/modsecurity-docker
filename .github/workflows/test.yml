@@ -1,0 +1,18 @@
+name: Test
+on:
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build image
+      run: docker build -t test v3.1
+    - name: Run image
+      run: docker run -d --name apache test
+    - name: Verify
+      run: |
+        [ $(docker inspect apache --format='{{.State.Running}}') = 'true' ]

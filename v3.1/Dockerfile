@@ -81,8 +81,8 @@ RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
       remoteip \
       rewrite \
       ssl \
- && grep -B 15 setvar:tx.crs_setup_version \
-      /opt/owasp-modsecurity-crs/crs-setup.conf.example > \
+ && grep -B 15 -A 1 -e LICENSE -e ^SecCollectionTimeout -e setvar:tx.crs_setup_version \
+      /opt/owasp-modsecurity-crs/crs-setup.conf.example | sed -e /^$/d -e s/^--$// > \
       /etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf
 
 COPY clamd.conf.template /etc/clamav/

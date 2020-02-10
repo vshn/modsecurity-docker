@@ -210,6 +210,7 @@ BEGIN {
 	gsub(/"/, "\\\"", Description)
 	gsub(/"/, "\\\"", Msg)
 	gsub(/"/, "\\\"", Data)
+	gsub(/"/, "\\\"", Uri)
 
 	if ( verbose ) {
 		print "Timestamp", Timestamp

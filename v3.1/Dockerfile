@@ -4,7 +4,8 @@ ENV APACHE_RUN_USER=www-data \
     APACHE_RUN_GROUP=root \
     SERVER_ADMIN=root@localhost \
     SERVER_NAME=localhost \
-    PORT=8080 \
+    HTTP_PORT=8080 \
+    SSL_PORT=8443 \
     BACKEND=http://localhost:8080 \
     BACKEND_WS=ws://localhost:8080 \
     APACHE_TIMEOUT=5 \
@@ -74,7 +75,9 @@ RUN mv -v /etc/apache2/conf-enabled/security.conf /etc/apache2/conf-available/ \
    -e 's/MaxRequestWorkers .*/MaxRequestWorkers ${HTTPD_MAX_REQUEST_WORKERS}/' \
  && ln -sfv /dev/stdout /var/log/apache2/access.log \
  && ln -sfv /dev/stderr /var/log/apache2/error.log \
- && a2enconf logging security \
+ && a2enconf \
+      logging \
+      security \
  && a2enmod \
       headers \
       proxy_wstunnel \
@@ -90,7 +93,7 @@ COPY clamd.conf.template /etc/clamav/
 RUN mkdir /tmp/geoip \
  && cd /tmp/geoip \
  && apt-get update \
- && apt-get install -y --no-install-recommends \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
       clamdscan \
       curl \
       gawk \

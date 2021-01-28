@@ -1,0 +1,15 @@
+version: '3'
+services:
+  waf:
+    build: .
+    environment:
+      BACKEND: http://backend
+      PARANOIA: 4
+    ports:
+    - "8080:8080"
+    links:
+    - backend
+  backend:
+    image: docker.io/kennethreitz/httpbin
+    ports: 
+    - "80"

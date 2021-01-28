@@ -2,30 +2,30 @@ name: Test
 on:
   pull_request:
     branches:
-    - master
+      - master
 
 jobs:
   test_3_1:
     name: Docker build v3.1
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Build image
-      run: docker build -t test v3.1
-    - name: Run image
-      run: docker run -d --name apache test
-    - name: Verify
-      run: |
-        [ $(docker inspect apache --format='{{.State.Running}}') = 'true' ]
+      - uses: actions/checkout@v2
+      - name: Build image
+        run: docker build -t test v3.1
+      - name: Run image
+        run: docker run -d --name apache test
+      - name: Verify
+        run: |
+          [ $(docker inspect apache --format='{{.State.Running}}') = 'true' ]
   test_3_3:
     name: Docker build v3.3
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Build image
-      run: docker build -t test v3.3
-    - name: Run image
-      run: docker run -d --name apache test
-    - name: Verify
-      run: |
-        [ $(docker inspect apache --format='{{.State.Running}}') = 'true' ]
+      - uses: actions/checkout@v2
+      - name: Build image
+        run: docker build -t test v3.3
+      - name: Run image
+        run: docker run -d --name apache test
+      - name: Verify
+        run: |
+          [ $(docker inspect apache --format='{{.State.Running}}') = 'true' ]

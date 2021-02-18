@@ -100,7 +100,25 @@ RUN mkdir -p \
     /tmp/modsecurity/tmp \
     /tmp/modsecurity/upload \
     /var/lock/apache2 \
-    /var/log/modsecurity/audit
+    /var/log/modsecurity/audit \
+ && chgrp -R 0 \
+    /etc/clamav \
+    /etc/modsecurity.d \
+    /opt/modsecurity \
+    /usr/local/apache2 \
+    /tmp/modsecurity \
+    /var/lock/apache2 \
+    /var/log \
+    /var/run \
+ && chmod -R g=u \
+    /etc/clamav \
+    /etc/modsecurity.d \
+    /opt/modsecurity \
+    /usr/local/apache2 \
+    /tmp/modsecurity \
+    /var/lock/apache2 \
+    /var/log \
+    /var/run
 
 COPY entrypoint.sh /entrypoint.sh
 

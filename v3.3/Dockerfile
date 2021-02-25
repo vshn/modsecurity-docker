@@ -72,6 +72,7 @@ RUN echo 'Include conf/extra/httpd-logging.conf' >> /usr/local/apache2/conf/http
  && sed -i '/conf\/extra\/httpd-mpm\.conf/s/^#//' conf/httpd.conf \
  && sed -i '/proxy_wstunnel_module/s/^#//' conf/httpd.conf \
  && sed -i '/logio_module/s/^#//' conf/httpd.conf \
+ && sed -i '/Include conf\/extra\/httpd-ssl.conf/ s/^#*/#/' conf/httpd.conf \
  && sed -i /usr/local/apache2/conf/extra/httpd-mpm.conf \
    -e 's/MaxRequestWorkers .*/MaxRequestWorkers ${HTTPD_MAX_REQUEST_WORKERS}/' \
  && ln -sfv /dev/stdout /var/log/apache2/access.log \

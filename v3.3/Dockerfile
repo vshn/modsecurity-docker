@@ -105,6 +105,7 @@ RUN mkdir -p \
     /etc/clamav \
     /etc/modsecurity.d \
     /opt/modsecurity \
+    /opt/owasp-crs \
     /usr/local/apache2 \
     /tmp/modsecurity \
     /var/lock/apache2 \
@@ -114,6 +115,7 @@ RUN mkdir -p \
     /etc/clamav \
     /etc/modsecurity.d \
     /opt/modsecurity \
+    /opt/owasp-crs \
     /usr/local/apache2 \
     /tmp/modsecurity \
     /var/lock/apache2 \

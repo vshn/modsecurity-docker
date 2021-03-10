@@ -69,6 +69,8 @@ RUN echo 'Include conf/extra/httpd-logging.conf' >> /usr/local/apache2/conf/http
    -e 's/^LogLevel .*$/LogLevel ${APACHE_LOGLEVEL}/' \
    -e 's/^ErrorLog .*$/ErrorLog ${APACHE_ERRORLOG}/' \
    -e 's/^Timeout 300$/Timeout ${APACHE_TIMEOUT}/' \
+   -e 's/^Include \/etc\/modsecurity.d\/setup.conf$/Include \/etc\/modsecurity.d\/\*.conf/' \
+ && rm /etc/modsecurity.d/setup.conf \
  && sed -i '/conf\/extra\/httpd-mpm\.conf/s/^#//' conf/httpd.conf \
  && sed -i '/proxy_wstunnel_module/s/^#//' conf/httpd.conf \
  && sed -i '/logio_module/s/^#//' conf/httpd.conf \

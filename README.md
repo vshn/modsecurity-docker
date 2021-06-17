@@ -48,7 +48,7 @@ FROM vshn/modsecurity:3.1
 ENV PARANOIA=1 \
     ANOMALY_INBOUND=500 \
     ANOMALY_OUTBOUND=400 \
-    PORT=8000 \
+    HTTP_PORT=8000 \
     BACKEND=http://facade-svc:9000
 
 VOLUME /opt/modsecurity/rules/before-crs
@@ -88,8 +88,10 @@ There are a variety of environment variables available to configure the image.
   * inbound anomaly score threshold; start with 1000 and try to bring it down to 5
 * ANOMALY_OUTBOUND (Default: `1000`)
   * outbound anomaly score threshold; start with 1000 and try to bring it down to 4
-* PORT (Default: `8080`)
-  * Port the Apache process should listen on
+* HTTP_PORT (Default: `8080`)
+  * Port the Apache process should listen on for HTTP
+* SSL_PORT (Default: `8443`)
+  * Port the Apache process should listen on for HTTPS
 * BACKEND
   * The IP/URL of the service which should be secured by ModSecurity.
 * BACKEND_WS

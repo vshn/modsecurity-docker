@@ -1,4 +1,4 @@
-FROM docker.io/owasp/modsecurity-crs:3.3-apache
+FROM docker.io/owasp/modsecurity-crs:v3.3.2-apache
 
 ENV APACHE_RUN_USER=www-data \
     APACHE_RUN_GROUP=root \

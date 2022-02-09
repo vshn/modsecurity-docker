@@ -2,16 +2,13 @@
 
 [![dockeri.co](http://dockeri.co/image/vshn/modsecurity)](https://hub.docker.com/r/vshn/modsecurity/)
 
-[![Build Status](https://img.shields.io/docker/cloud/build/vshn/modsecurity.svg)](https://hub.docker.com/r/vshn/modsecurity/builds
-) [![GitHub issues](https://img.shields.io/github/issues-raw/vshn/modsecurity-docker.svg)](https://github.com/vshn/modsecurity-docker/issues
+[![GitHub issues](https://img.shields.io/github/issues-raw/vshn/modsecurity-docker.svg)](https://github.com/vshn/modsecurity-docker/issues
 ) [![GitHub PRs](https://img.shields.io/github/issues-pr-raw/vshn/modsecurity-docker.svg)](https://github.com/vshn/modsecurity-docker/pulls
 ) [![License](https://img.shields.io/github/license/vshn/modsecurity-docker.svg)](https://github.com/vshn/modsecurity-docker/blob/master/LICENSE)
 
 Based on the official [`owasp/modsecurity-crs`](https://hub.docker.com/r/owasp/modsecurity-crs) image.
 
 * Contains the necessary tweaks to run on [OpenShift](https://www.openshift.com/).
-* Uses the [GeoLite2 Country Database](https://dev.maxmind.com/geoip/geoip2/geolite2/) provided
-  by MaxMind under the [CC BY-SA 4.0 license](https://creativecommons.org/licenses/by-sa/4.0/).
 * Includes [ClamAV anti-virus scanner](https://www.clamav.net/) provided by Cisco-TALOS under the
   [GPL v2 (or later) license](https://github.com/Cisco-Talos/clamav-devel/blob/master/COPYING).
 
@@ -19,18 +16,10 @@ Based on the official [`owasp/modsecurity-crs`](https://hub.docker.com/r/owasp/m
 
 * [![latest](
   https://img.shields.io/badge/latest-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](
-  https://github.com/vshn/modsecurity-docker/blob/master/v3.1/Dockerfile) [![size/layers](
-  https://images.microbadger.com/badges/image/vshn/modsecurity:latest.svg)](
-  https://microbadger.com/images/vshn/modsecurity:latest) [![based on](
-  https://img.shields.io/badge/Git-v3.1/dev-grey.svg?colorA=5a5b5c&colorB=9a9b9c&logo=github)](
-  https://github.com/SpiderLabs/owasp-modsecurity-crs/tree/v3.1/dev/util/docker) (v3.1)
-* [![3.1](
-  https://img.shields.io/badge/3.1-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](
-  https://github.com/vshn/modsecurity-docker/blob/master/v3.1/Dockerfile) [![size/layers](
-  https://images.microbadger.com/badges/image/vshn/modsecurity:3.1.svg)](
-  https://microbadger.com/images/vshn/modsecurity:3.1) [![based on](
-  https://img.shields.io/badge/Git-v3.1/dev-grey.svg?colorA=5a5b5c&colorB=9a9b9c&logo=github)](
-  https://github.com/SpiderLabs/owasp-modsecurity-crs/tree/v3.1/dev/util/docker) (ModSecurity 2, CRS v3.1)
+  https://github.com/vshn/modsecurity-docker/blob/master/v3.3/Dockerfile) based on [coreruleset/modsecurity-crs-docker](ttps://github.com/coreruleset/modsecurity-crs-docker) (ModSecurity 2, CRS v3.3.2)
+* [![3.3](
+  https://img.shields.io/badge/3.3-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](
+  https://github.com/vshn/modsecurity-docker/blob/master/v3.3/Dockerfile) based on [coreruleset/modsecurity-crs-docker](ttps://github.com/coreruleset/modsecurity-crs-docker) (ModSecurity 2, CRS v3.3.2)
 
 ## Usage
 
@@ -43,7 +32,7 @@ $ docker run -p 80:80 -it -e PARANOIA=4 --rm vshn/modsecurity bash
 With a Dockerfile:
 
 ```Dockerfile
-FROM vshn/modsecurity:3.1
+FROM docker.io/vshn/modsecurity:3.3
 
 ENV PARANOIA=1 \
     ANOMALY_INBOUND=500 \
@@ -60,7 +49,7 @@ VOLUME /tmp/modsecurity
 With Docker Compose to start a ModSecurity and a httpbin container:
 
 ```console
-cd v3.1
+cd v3.3
 docker-compose up
 ```
 
@@ -225,8 +214,3 @@ Mount your custom rules
 * at `/opt/modsecurity/rules/after-crs/` to load them after the CRS has been loaded.
 
 All custom rule files must end in `.conf` in order to be loaded.
-
-## Credits
-
-This product includes GeoLite2 data created by MaxMind, available from
-[https://www.maxmind.com](https://www.maxmind.com).

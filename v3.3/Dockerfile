@@ -1,4 +1,4 @@
-FROM docker.io/owasp/modsecurity-crs:3.3.2-apache@sha256:7bf5eb33fabaec125e5ccf5a6003fbc2f2d1da442f516c30e970c21f5ec1651b
+FROM docker.io/owasp/modsecurity-crs:3.3.2-apache@sha256:89adca94f436b0bbba69ef5141ee75867bfcd2ae5c8ba98e198865d0fd62d1fe
 
 ENV APACHE_RUN_USER=www-data \
     APACHE_RUN_GROUP=root \

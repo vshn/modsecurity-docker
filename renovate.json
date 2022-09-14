@@ -6,6 +6,10 @@
     {
       "matchUpdateTypes": ["digest"],
       "automerge": true
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": false
     }
   ]
 }

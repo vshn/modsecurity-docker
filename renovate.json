@@ -4,11 +4,16 @@
   ],
   "packageRules": [
     {
-      "matchUpdateTypes": ["digest"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["owasp/modsecurity-crs"],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>[a-z\\-]+)-(?<build>\\d+)$"
+    },
+    {
+      "matchUpdateTypes": ["patch", "digest"],
       "automerge": true
     },
     {
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": ["minor"],
       "automerge": false
     }
   ]

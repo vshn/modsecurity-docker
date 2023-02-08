@@ -6,7 +6,7 @@
     {
       "matchDatasources": ["docker"],
       "matchPackageNames": ["owasp/modsecurity-crs"],
-      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>[a-z\\-]+)-(?<build>\\d+)$"
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>[a-z\\-]+)-(?<build>\\d+)@(?<currentDigest>sha256:[a-f0-9]{64})$"
     },
     {
       "matchUpdateTypes": ["patch", "digest"],

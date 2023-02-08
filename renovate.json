@@ -5,8 +5,8 @@
   "packageRules": [
     {
       "matchDatasources": ["docker"],
-      "matchPackagePatterns": ["^(docker\.io/)?owasp/modsecurity-crs$"],
-      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>[a-z\\-]+)-(?<build>\\d+)@(?<currentDigest>sha256:[a-f0-9]{64})$"
+      "matchPackagePatterns": ["^(docker\\.io/)?owasp/modsecurity-crs$"],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>[a-z\\-]+)-(?<build>\\d+)$"
     },
     {
       "matchUpdateTypes": ["patch", "digest"],

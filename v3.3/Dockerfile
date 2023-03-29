@@ -59,12 +59,14 @@ ENV APACHE_RUN_USER=www-data \
 
 COPY httpd-vhosts.conf /usr/local/apache2/conf/extra/httpd-vhosts.conf
 COPY httpd-logging.conf /usr/local/apache2/conf/extra/httpd-logging.conf
+COPY deflate.conf /usr/local/apache2/conf/extra/deflate.conf
 COPY modsecurity.d /etc/modsecurity.d
 COPY custom-rules/before-crs.dist /opt/modsecurity/rules/before-crs.dist
 COPY custom-rules/after-crs.dist /opt/modsecurity/rules/after-crs.dist
 COPY transform-alert-message.awk virus-check.pl /opt/
 
 RUN echo 'Include conf/extra/httpd-logging.conf' >> /usr/local/apache2/conf/httpd.conf \
+ && echo 'Include conf/extra/deflate.conf' >> /usr/local/apache2/conf/httpd.conf \
  && echo 'TraceEnable Off' >> /usr/local/apache2/conf/extra/httpd-default.conf \
  && sed -i /usr/local/apache2/conf/extra/httpd-modsecurity.conf \
    -e 's/^LogLevel .*$/LogLevel ${APACHE_LOGLEVEL}/' \
@@ -75,6 +77,7 @@ RUN echo 'Include conf/extra/httpd-logging.conf' >> /usr/local/apache2/conf/http
  && sed -i '/conf\/extra\/httpd-mpm\.conf/s/^#//' conf/httpd.conf \
  && sed -i '/proxy_wstunnel_module/s/^#//' conf/httpd.conf \
  && sed -i '/logio_module/s/^#//' conf/httpd.conf \
+ && sed -i '/deflate_module/s/^#//' conf/httpd.conf \
  && sed -i '/Include conf\/extra\/httpd-ssl.conf/ s/^#*/#/' conf/httpd.conf \
  && sed -i /usr/local/apache2/conf/extra/httpd-mpm.conf \
    -e 's/MaxRequestWorkers .*/MaxRequestWorkers ${HTTPD_MAX_REQUEST_WORKERS}/' \

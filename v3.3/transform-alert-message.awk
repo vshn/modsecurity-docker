@@ -87,6 +87,10 @@ BEGIN {
 	Description = ""
 	json_out = ""
 
+	# This substition is done for PCRE error messages. For some reason the different sections of the
+	# error message, are not separated with a space between the closing and opening square brackets.
+	# Adding a space in those cases allows `awk` to properly split the different sections
+	gsub(/\]\[/,"] [");
 	for (i = 1; i <= NF; i++) {
 		# read values
 		switch (FN) {

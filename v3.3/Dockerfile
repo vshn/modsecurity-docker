@@ -103,6 +103,7 @@ RUN apt-get update \
 RUN mkdir -p \
     /opt/modsecurity/rules/after-crs \
     /opt/modsecurity/rules/before-crs \
+    /opt/modsecurity/rules/init-crs \
     /tmp/modsecurity/data \
     /tmp/modsecurity/tmp \
     /tmp/modsecurity/upload \

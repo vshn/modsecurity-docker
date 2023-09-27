@@ -122,6 +122,12 @@ There are a variety of environment variables available to configure the image.
   * `SecDebugLog`
 * MODSEC_DEBUG_LOGLEVEL
   * `SecDebugLogLevel`
+* MODSEC_AUDIT_ENGINE
+  * `SecAuditEngine`
+* MODSEC_AUDIT_LOG_RELEVANT_STATUS
+  * `SecAuditLogRelevantStatus`
+* MODSEC_AUDIT_LOG_PARTS
+  * `SecAuditLogParts`
 * MODSEC_AUDIT_LOG_TYPE
   * `SecAuditLogType`
 * MODSEC_AUDIT_LOG_FORMAT

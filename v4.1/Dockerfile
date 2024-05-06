@@ -1,4 +1,9 @@
-FROM docker.io/owasp/modsecurity-crs:3.3.5-apache-202402140602@sha256:2a6f6f3dbdcf5edda48606e1dd325f7fb785de7b2d22b70dcb03d692046c1d05
+FROM docker.io/owasp/modsecurity-crs:4.1.0-apache-202405050505@sha256:ce9ebaf23dc8d7c229e8a2eef500bcabf6756800ca3226de7553dd70d051feec
+
+# Upstream converted the image to run apache directly as user `httpd` instead of dropping privileges after start-up.
+# see: https://github.com/coreruleset/modsecurity-crs-docker/commit/f9c687500e343f05005739c3d2c72c1dc92b0ff1#diff-02c190dd34ee6ce466ae02364d954e15a049a0343ba71774688653550e4c82f6R215
+# and https://github.com/coreruleset/modsecurity-crs-docker/pull/227
+USER 0:0
 
 ENV APACHE_RUN_USER=www-data \
     APACHE_RUN_GROUP=root \
@@ -135,6 +140,10 @@ RUN mkdir -p \
     /var/run
 
 COPY entrypoint.sh /entrypoint.sh
+
+# See beginning of file and upstream PR:
+# https://github.com/coreruleset/modsecurity-crs-docker/pull/227/files#diff-02c190dd34ee6ce466ae02364d954e15a049a0343ba71774688653550e4c82f6R215
+USER httpd
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD ["apachectl", "-D", "FOREGROUND"]

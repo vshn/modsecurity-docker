@@ -5,13 +5,13 @@ on:
       - master
 
 jobs:
-  test_3_3:
-    name: Docker build v3.3
+  test_4_1:
+    name: Docker build v4.1
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build image
-        run: docker build -t test v3.3
+        run: docker build -t test v4.1
       - name: Run image
         run: docker run -d --name apache test
       - name: Verify

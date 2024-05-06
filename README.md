@@ -16,10 +16,10 @@ Based on the official [`owasp/modsecurity-crs`](https://hub.docker.com/r/owasp/m
 
 * [![latest](
   https://img.shields.io/badge/latest-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](
-  https://github.com/vshn/modsecurity-docker/blob/master/v3.3/Dockerfile) based on [coreruleset/modsecurity-crs-docker](ttps://github.com/coreruleset/modsecurity-crs-docker) (ModSecurity 2, CRS v3.3.2)
-* [![3.3](
-  https://img.shields.io/badge/3.3-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](
-  https://github.com/vshn/modsecurity-docker/blob/master/v3.3/Dockerfile) based on [coreruleset/modsecurity-crs-docker](ttps://github.com/coreruleset/modsecurity-crs-docker) (ModSecurity 2, CRS v3.3.2)
+  https://github.com/vshn/modsecurity-docker/blob/master/v4.1/Dockerfile) based on [coreruleset/modsecurity-crs-docker](ttps://github.com/coreruleset/modsecurity-crs-docker) (ModSecurity 2, CRS v4.1.0)
+* [![4.1](
+  https://img.shields.io/badge/4.1-blue.svg?colorA=22313f&colorB=4a637b&logo=docker)](
+  https://github.com/vshn/modsecurity-docker/blob/master/v4.1/Dockerfile) based on [coreruleset/modsecurity-crs-docker](ttps://github.com/coreruleset/modsecurity-crs-docker) (ModSecurity 2, CRS v4.1.0)
 
 ## Usage
 
@@ -32,7 +32,7 @@ $ docker run -p 80:80 -it -e PARANOIA=4 --rm vshn/modsecurity bash
 With a Dockerfile:
 
 ```Dockerfile
-FROM docker.io/vshn/modsecurity:3.3
+FROM docker.io/vshn/modsecurity:4.1
 
 ENV PARANOIA=1 \
     ANOMALY_INBOUND=500 \
@@ -49,7 +49,7 @@ VOLUME /tmp/modsecurity
 With Docker Compose to start a ModSecurity and a httpbin container:
 
 ```console
-cd v3.3
+cd v4.1
 docker-compose up
 ```
 

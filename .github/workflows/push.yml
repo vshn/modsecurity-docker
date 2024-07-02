@@ -31,15 +31,15 @@ jobs:
 
     - name: Determine Tags & Labels based on Git ref
       id: meta
-      uses: docker/metadata-action@v6
+      uses: docker/metadata-action@v5
       with:
         images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
 
     - name: Build & Push container image
       uses: docker/build-push-action@v6
       with:
-        directory: v3.3
-        pushImage: true
+        context: ./v3.3
+        push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 

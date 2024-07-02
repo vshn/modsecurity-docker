@@ -36,12 +36,10 @@ jobs:
         images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
 
     - name: Build & Push container image
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
-        context: ./v3.3
-        file: ./Dockerfile
-        push: true
+        directory: v3.3
+        pushImage: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        addLatest: true
 

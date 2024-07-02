@@ -12,7 +12,7 @@ env:
 
 jobs:
   # Push image to GitHub Packages.
-  container:
+  build_and_push:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -38,7 +38,7 @@ jobs:
     - name: Build & Push container image
       uses: docker/build-push-action@v5
       with:
-        context: .
+        context: ./v3.3
         file: ./Dockerfile
         push: true
         tags: ${{ steps.meta.outputs.tags }}

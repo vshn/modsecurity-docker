@@ -14,7 +14,7 @@
     },
     {
       "matchUpdateTypes": ["minor"],
-      "reviewers": ["team:nunki"]
+      "reviewers": ["team:nunki"],
       "automerge": false
     }
   ]

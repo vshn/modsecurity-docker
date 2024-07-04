@@ -1,4 +1,4 @@
-FROM docker.io/owasp/modsecurity-crs:4.1.0-apache-202405050505
+FROM docker.io/owasp/modsecurity-crs:4.3-apache-202406090906
 
 # Default values from upstream at the time of writing; redefined here to
 # prevent issues when upstream defaults change.

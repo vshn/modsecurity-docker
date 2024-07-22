@@ -8,20 +8,22 @@ services:
       - "127.0.0.1:8080:8080"
     environment:
       BACKEND: "http://backend:9000"
-      BLOCKING_PARANOIA: 4
+      BLOCKING_PARANOIA: 1
       ANOMALY_INBOUND: 5
       ANOMALY_OUTBOUND: 4
+      ERRORLOG: "/proc/self/fd/1"
       ACCESSLOG: "/proc/self/fd/1"
     volumes:
       - type: bind
         source: ./config/custom-rules/init-crs.dist
-        target: /opt/modsecurity/rules/init-crs 
+        target: /opt/modsecurity/rules/init-crs.dist 
       - type: bind
         source: ./config/custom-rules/before-crs.dist
         target: /opt/modsecurity/rules/before-crs.dist
       - type: bind
         source: ./config/custom-rules/after-crs.dist
-        target: /opt/modsecurity/rules/after-crs.dist
+        target: /opt/modsecurity/rules/after-crs.dist 
+
   backend:
     image: "docker.io/kennethreitz/httpbin"
     command: ["gunicorn", "-b", "0.0.0.0:9000", "httpbin:app", "-k", "gevent"]

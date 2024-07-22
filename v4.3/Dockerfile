@@ -91,6 +91,7 @@ ENV \
 # Upstream; customized
 ENV \
     ACCESSLOG=/proc/self/fd/1 \
+	MODSEC_DEBUG_LOG=/dev/stdout \
     ALLOWED_METHODS='GET HEAD POST OPTIONS DELETE PUT PROPFIND' \
     ALLOWED_REQUEST_CONTENT_TYPE='|application/x-www-form-urlencoded| |multipart/form-data| |text/xml| |application/xml| |application/x-amf| |application/json|' \
     ANOMALY_INBOUND=1000 \
@@ -102,7 +103,6 @@ ENV \
     LOGLEVEL=notice \
     MAX_FILE_SIZE=100000000 \
     MAX_NUM_ARGS=300 \
-    MODSEC_AUDIT_LOG_PARTS=ABEFHIJZ \
     MODSEC_PCRE_MATCH_LIMIT=500000 \
     MODSEC_PCRE_MATCH_LIMIT_RECURSION=500000 \
     MODSEC_REQ_BODY_LIMIT=100000000 \
@@ -118,14 +118,18 @@ ENV \
     APACHE_PERFLOG='/dev/stdout perflogjson env=write_perflog'
     
 USER root
-COPY ./config/apache/httpd-vhosts.conf /usr/local/apache2/conf/extra/
 COPY ./config/apache/httpd-logging.conf /usr/local/apache2/conf/extra/
 COPY ./config/apache/deflate.conf /usr/local/apache2/conf/extra/
 COPY ./scripts/docker-entrypoint.sh /docker-entrypoint.sh
 COPY ./scripts/transform-alert-message.awk ./scripts/virus-check.pl /opt/
 COPY ./config/modsecurity.d/include.conf /etc/modsecurity.d/setup.conf
 
-RUN echo 'Include conf/extra/httpd-logging.conf' >> /usr/local/apache2/conf/httpd.conf \
+
+RUN sed -i '/Include conf\/extra\/httpd-modsecurity.conf/d' /usr/local/apache2/conf/httpd.conf \
+#	&& echo 'Include conf/extra/httpd-logging-before-modsec.conf' >> /usr/local/apache2/conf/httpd.conf \
+	&& echo 'Include conf/extra/httpd-modsecurity.conf' >> /usr/local/apache2/conf/httpd.conf \
+	&& echo 'Include conf/extra/httpd-logging.conf' >> /usr/local/apache2/conf/httpd.conf \
+#	&& echo 'Include conf/extra/httpd-logging-after-modsec.conf' >> /usr/local/apache2/conf/httpd.conf \
 	&& echo 'Include conf/extra/deflate.conf' >> /usr/local/apache2/conf/httpd.conf \
 	&& echo 'TraceEnable Off' >> /usr/local/apache2/conf/extra/httpd-default.conf \
 	&& sed -i '/conf\/extra\/httpd-mpm\.conf/s/^#//' conf/httpd.conf \
@@ -146,6 +150,10 @@ RUN apt-get update \
  	&& rm -rf /var/lib/apt/lists/*
 
 COPY ./config/clamd.conf /etc/clamav/clamd.conf
+RUN mkdir -pv \
+	/opt/modsecurity/rules/init-crs.dist \
+	/opt/modsecurity/rules/before-crs.dist \
+	/opt/modsecurity/rules/after-crs.dist
 
 # Ensure config files cannot be overwritten at runtime ...
 RUN chown -R 0:0 \

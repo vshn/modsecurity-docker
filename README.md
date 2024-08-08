@@ -21,8 +21,9 @@ This image is currently being reworked.
 - [x] JSON AccessLog
 - [x] JSON ModSecurity log
 - [x] custom rules support (`init`, `before`, `after`)
-- [ ] contains ClamAV
+- [x] contains ClamAV
 - [ ] automated release (tagging) process
+- [ ] migrate other random configurations from the v3 image
 
 ## Usage
 

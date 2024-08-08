@@ -21,13 +21,14 @@ ENV ACCESSLOG=/dev/stdout \
     MODSEC_PCRE_MATCH_LIMIT_RECURSION=500000 \
     MODSEC_REQ_BODY_LIMIT=100000000 \
     MODSEC_REQ_BODY_NOFILES_LIMIT=5242880 \
-    MODSEC_RESP_BODY_LIMIT=500000000
+    MODSEC_RESP_BODY_LIMIT=500000000 \
+    CLAMD_DEBUG_LOG=off
 
 USER root
 
 RUN set -x && \
     # Install additional required tools \
-    apk add --no-cache coreutils gawk && \
+    apk add --no-cache clamav-clamdscan coreutils gawk && \
     # Disable all TLS related stuff (we'll have a reverse-proxy in front of us \
     # doing TLS termination) Also see the amended ./conf/httpd-vhosts.conf \
     # file. \
@@ -51,12 +52,12 @@ RUN chown -R 0:0 \
         /opt/owasp-crs
 
 # Customized configuration files
-COPY ./transform-alert-message.awk /opt/
-COPY ./conf/* /usr/local/apache2/conf/extra/
-COPY ./modsecurity.d/setup.conf /etc/modsecurity.d/setup.conf
+COPY transform-alert-message.awk virus-check.pl /opt/
+COPY clamd.conf /etc/clamav/clamd.conf
+COPY conf/* /usr/local/apache2/conf/extra/
+COPY modsecurity.d/setup.conf /etc/modsecurity.d/setup.conf
 
 # Custom ModSecurity rules
-# RUN mkdir -pv /opt/modsecurity/rules/{init,before,after}-crs
 COPY ./custom-rules/before-crs.dist /opt/modsecurity/rules/before-crs.dist
 COPY ./custom-rules/after-crs.dist /opt/modsecurity/rules/after-crs.dist
 

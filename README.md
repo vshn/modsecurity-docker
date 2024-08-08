@@ -6,25 +6,6 @@ Based on the official [coreruleset/modsecurity-crs-docker](https://github.com/co
 - Sets opinionated default configurations
 - Includeds the [ClamAV anti-virus scanner](https://www.clamav.net/) client
 
-## Status
-
-This image is currently being reworked.
-
-### Backlog
-
-- [x] rudimentary development environment
-- [x] use the `alpine` upstream image
-- [x] build & push to GHCR
-- [x] automated updates via Renovate
-- [x] can run on OpenShift
-- [ ] ModSecurity configuration defaults (& documented)
-- [x] JSON AccessLog
-- [x] JSON ModSecurity log
-- [x] custom rules support (`init`, `before`, `after`)
-- [x] contains ClamAV
-- [ ] automated release (tagging) process
-- [ ] migrate other random configurations from the v3 image
-
 ## Usage
 
 The latest image can be pulled from
@@ -59,6 +40,13 @@ For all supported endpoints, visit [localhost:8080](http://localhost:8080/).
 Most aspects can be configured using environment variables.
 For a full list of supported environment variables, see the [upstream documentation][upstream].
 We use the Apache Alpine image.
+
+### Extra configuration variables
+
+- `HEALTHZ_CIDRS` - CIDR from which requests to the `/healthz` endpoint should be whitelisted.
+  This should usually be set to your Kubernetes host subnet range.
+  Multiple CIDR ranges can be specified.
+  Example: `1.2.3.4/24,5.6.7.8/24`
 
 ## License
 

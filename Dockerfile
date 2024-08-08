@@ -32,6 +32,7 @@ RUN set -x && \
     # Disable all TLS related stuff (we'll have a reverse-proxy in front of us \
     # doing TLS termination) Also see the amended ./conf/httpd-vhosts.conf \
     # file. \
+    sed -i '/LoadModule ssl_module/d' /usr/local/apache2/conf/httpd.conf && \
     sed -i '/generate-certificate/d' /docker-entrypoint.sh && \
     sed -i '/Include .*httpd-ssl.conf/d' /usr/local/apache2/conf/httpd.conf && \
     # Disable CRS plugin system \

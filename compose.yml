@@ -1,0 +1,13 @@
+name: modsecurity
+
+services:
+  waf:
+    build: .
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      BACKEND: "http://backend:9000"
+
+  backend:
+    image: "docker.io/kennethreitz/httpbin"
+    command: ["gunicorn", "-b", "0.0.0.0:9000", "httpbin:app", "-k", "gevent"]

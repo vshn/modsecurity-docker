@@ -42,21 +42,20 @@ my $output = "";
 # Sub-Functions
 #---------------------------------------------------
 
-sub writelog {  
-   # We open/close the logfile after every time as there might be 
-   # multiple instances attempting to write.
-   # If there is a collision we simply ignore the failure and move on
+sub writelog {
+    # We open/close the logfile after every time as there might be
+    # multiple instances attempting to write.
+    # If there is a collision we simply ignore the failure and move on
 
-   my ($logitem) = @_;
-   my $date = strftime "%Y-%m-%d %H:%M:%S", localtime;
-   
-   if ( open(LOG, ">>", $logfile)) {
-   	print LOG "$date : pid $$ : $logitem\n";
-   	close(LOG);
-   } else {
-   	print "Problem writing logfile $logfile. Ignoring.\n";
-   }
+    my ($logitem) = @_;
+    my $date = strftime "%Y-%m-%d %H:%M:%S", localtime;
 
+    if ( open(LOG, ">>", $logfile)) {
+        print LOG "$date : pid $$ : $logitem\n";
+        close(LOG);
+    } else {
+        print "Problem writing logfile $logfile. Ignoring.\n";
+    }
 }
 
 #---------------------------------------------------
@@ -106,4 +105,3 @@ if ( $do_log ) { writelog("Return value : $output")} ;
 print "$output\n";
 
 if ( $do_log ) { writelog("Bailing out")} ;
-

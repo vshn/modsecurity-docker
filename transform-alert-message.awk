@@ -275,6 +275,8 @@ BEGIN {
 
 		print json_out
 
+	} else {
+		print $0
 	}
 }
 

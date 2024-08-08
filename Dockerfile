@@ -1,7 +1,7 @@
 FROM ghcr.io/coreruleset/modsecurity-crs:4.3.0-apache-alpine-202406090906
 
 ENV ACCESSLOG=/dev/stdout \
-    ERRORLOG=/dev/stderr \
+    ERRORLOG='"|/usr/bin/stdbuf -i0 -o0 /opt/transform-alert-message.awk"' \
     PERFLOG=/dev/stdout \
     METRICSLOG=/dev/stdout \
     LOGLEVEL=notice \
@@ -26,6 +26,8 @@ ENV ACCESSLOG=/dev/stdout \
 USER root
 
 RUN set -x && \
+    # Install additional required tools \
+    apk add --no-cache coreutils gawk && \
     # Disable all TLS related stuff (we'll have a reverse-proxy in front of us \
     # doing TLS termination) Also see the amended ./conf/httpd-vhosts.conf \
     # file. \
@@ -49,6 +51,7 @@ RUN chown -R 0:0 \
         /opt/owasp-crs
 
 # Customized configuration files
+COPY ./transform-alert-message.awk /opt/
 COPY ./conf/* /usr/local/apache2/conf/extra/
 COPY ./modsecurity.d/setup.conf /etc/modsecurity.d/setup.conf
 

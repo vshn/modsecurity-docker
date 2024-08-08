@@ -18,9 +18,9 @@ This image is currently being reworked.
 - [x] automated updates via Renovate
 - [x] can run on OpenShift
 - [ ] ModSecurity configuration defaults (& documented)
-- [ ] JSON AccessLog
-- [ ] JSON ModSecurity log
-- [ ] custom rules support (`init`, `before`, `after`)
+- [x] JSON AccessLog
+- [x] JSON ModSecurity log
+- [x] custom rules support (`init`, `before`, `after`)
 - [ ] contains ClamAV
 - [ ] automated release (tagging) process
 

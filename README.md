@@ -16,7 +16,7 @@ This image is currently being reworked.
 - [x] use the `alpine` upstream image
 - [x] build & push to GHCR
 - [x] automated updates via Renovate
-- [ ] can run on OpenShift
+- [x] can run on OpenShift
 - [ ] ModSecurity configuration defaults (& documented)
 - [ ] JSON AccessLog
 - [ ] JSON ModSecurity log

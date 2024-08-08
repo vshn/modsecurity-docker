@@ -8,11 +8,10 @@ services:
       - "127.0.0.1:8080:8080"
     environment:
       BACKEND: "http://backend:9000"
-      BLOCKING_PARANOIA: 1
-      ANOMALY_INBOUND: 5
-      ANOMALY_OUTBOUND: 4
-      ERRORLOG: "/proc/self/fd/1"
-      ACCESSLOG: "/proc/self/fd/1"
+      BLOCKING_PARANOIA: 0
+      ANOMALY_INBOUND: 1
+      ANOMALY_OUTBOUND: 1
+      MODSEC_DEBUG_LOGLEVEL: 9
     volumes:
       - type: bind
         source: ./config/custom-rules/init-crs.dist

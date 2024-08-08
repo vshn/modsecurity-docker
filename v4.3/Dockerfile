@@ -90,17 +90,19 @@ ENV \
     BLOCKING_PARANOIA=1
 # Upstream; customized
 ENV \
-    ACCESSLOG=/proc/self/fd/1 \
+	MODSEC_AUDIT_ENGINE=on \
+    ERRORLOG='"|/usr/bin/stdbuf -i0 -o0 /opt/transform-alert-message.awk"' \
+    ACCESSLOG=/dev/stdout \
 	MODSEC_DEBUG_LOG=/dev/stdout \
+	MODSCE_AUDIT_LOG=/dev/stoudt \
     ALLOWED_METHODS='GET HEAD POST OPTIONS DELETE PUT PROPFIND' \
     ALLOWED_REQUEST_CONTENT_TYPE='|application/x-www-form-urlencoded| |multipart/form-data| |text/xml| |application/xml| |application/x-amf| |application/json|' \
     ANOMALY_INBOUND=1000 \
     ANOMALY_OUTBOUND=1000 \
     ARG_NAME_LENGTH=256 \
     COMBINED_FILE_SIZES=100000000 \
-    ERRORLOG='"|/usr/bin/stdbuf -i0 -o0 /opt/transform-alert-message.awk"' \
     HTTPD_MAX_REQUEST_WORKERS=250 \
-    LOGLEVEL=notice \
+    LOGLEVEL=debug \
     MAX_FILE_SIZE=100000000 \
     MAX_NUM_ARGS=300 \
     MODSEC_PCRE_MATCH_LIMIT=500000 \
@@ -108,36 +110,27 @@ ENV \
     MODSEC_REQ_BODY_LIMIT=100000000 \
     MODSEC_REQ_BODY_NOFILES_LIMIT=5242880 \
     MODSEC_RESP_BODY_LIMIT=500000000 \
-    SSL_ENGINE=off \
     TIMEOUT=5 \
     TOTAL_ARG_LENGTH=100000 \
 	WORKER_CONNECTIONS=250 
 
-# Custom
-ENV \
-    APACHE_PERFLOG='/dev/stdout perflogjson env=write_perflog'
-    
 USER root
-COPY ./config/apache/httpd-logging.conf /usr/local/apache2/conf/extra/
+COPY ./config/apache/httpd-vhosts.conf /usr/local/apache2/conf/extra/httpd-vhosts.conf
+COPY ./config/apache/httpd-logging.conf /usr/local/apache2/conf/extra/httpd-logging.conf
 COPY ./config/apache/deflate.conf /usr/local/apache2/conf/extra/
 COPY ./scripts/docker-entrypoint.sh /docker-entrypoint.sh
 COPY ./scripts/transform-alert-message.awk ./scripts/virus-check.pl /opt/
 COPY ./config/modsecurity.d/include.conf /etc/modsecurity.d/setup.conf
 
-
-RUN sed -i '/Include conf\/extra\/httpd-modsecurity.conf/d' /usr/local/apache2/conf/httpd.conf \
-#	&& echo 'Include conf/extra/httpd-logging-before-modsec.conf' >> /usr/local/apache2/conf/httpd.conf \
-	&& echo 'Include conf/extra/httpd-modsecurity.conf' >> /usr/local/apache2/conf/httpd.conf \
-	&& echo 'Include conf/extra/httpd-logging.conf' >> /usr/local/apache2/conf/httpd.conf \
-#	&& echo 'Include conf/extra/httpd-logging-after-modsec.conf' >> /usr/local/apache2/conf/httpd.conf \
+RUN \
+	echo 'Include conf/extra/httpd-logging.conf' >> /usr/local/apache2/conf/httpd.conf \
 	&& echo 'Include conf/extra/deflate.conf' >> /usr/local/apache2/conf/httpd.conf \
 	&& echo 'TraceEnable Off' >> /usr/local/apache2/conf/extra/httpd-default.conf \
 	&& sed -i '/conf\/extra\/httpd-mpm\.conf/s/^#//' conf/httpd.conf \
 	&& sed -i '/proxy_wstunnel_module/s/^#//' conf/httpd.conf \
 	&& sed -i '/logio_module/s/^#//' conf/httpd.conf \
 	&& sed -i '/deflate_module/s/^#//' conf/httpd.conf \
-	&& sed -i '/Include conf\/extra\/httpd-ssl.conf/ s/^#*/#/' conf/httpd.conf \
-	&& sed -i '/CustomLog/s/modsec/extendedjson/' conf/httpd.conf 
+	&& sed -i '/Include conf\/extra\/httpd-ssl.conf/ s/^#*/#/' conf/httpd.conf 
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \

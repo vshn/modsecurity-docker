@@ -21,7 +21,9 @@ ENV ACCESSLOG=/dev/stdout \
     MODSEC_REQ_BODY_LIMIT=100000000 \
     MODSEC_REQ_BODY_NOFILES_LIMIT=5242880 \
     MODSEC_RESP_BODY_LIMIT=500000000 \
-    CLAMD_DEBUG_LOG=off
+    CLAMD_DEBUG_LOG=off \
+    # Use the default docker subnet as the default \
+    HEALTHZ_CIDRS=172.18.0.0/24
 
 USER root
 

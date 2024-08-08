@@ -3,7 +3,6 @@ FROM ghcr.io/coreruleset/modsecurity-crs:4.3.0-apache-alpine-202406090906
 ENV ACCESSLOG=/dev/stdout \
     ERRORLOG='"|/usr/bin/stdbuf -i0 -o0 /opt/transform-alert-message.awk"' \
     PERFLOG=/dev/stdout \
-    METRICSLOG=/dev/stdout \
     LOGLEVEL=notice \
     TIMEOUT=5 \
     WORKER_CONNECTIONS=250 \
@@ -32,7 +31,6 @@ RUN set -x && \
     # Disable all TLS related stuff (we'll have a reverse-proxy in front of us \
     # doing TLS termination) Also see the amended ./conf/httpd-vhosts.conf \
     # file. \
-    sed -i '/LoadModule ssl_module/d' /usr/local/apache2/conf/httpd.conf && \
     sed -i '/generate-certificate/d' /docker-entrypoint.sh && \
     sed -i '/Include .*httpd-ssl.conf/d' /usr/local/apache2/conf/httpd.conf && \
     # Disable CRS plugin system \

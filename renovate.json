@@ -1,11 +1,9 @@
 {
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:base"],
   "packageRules": [
     {
       "matchDatasources": ["docker"],
-      "matchPackagePatterns": ["^(docker\\.io/)?owasp/modsecurity-crs$"],
+      "matchPackagePatterns": ["^ghcr\\.io/coreruleset/modsecurity-crs$"],
       "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>[a-z\\-]+)-(?<build>\\d+)$"
     },
     {

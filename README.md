@@ -35,6 +35,12 @@ curl -i http://localhost:8080/cookies/set/secret/random-value
 
 For all supported endpoints, visit [localhost:8080](http://localhost:8080/).
 
+### Release
+
+To publish a new release, simply create & push a new Git Tag.
+
+NOTE: Tags should follow the included CRS version. Use the build number to signify changes to the images with the same CRS number, e.g. `v4.3.0-0` -> `v4.3.0-1`.
+
 ## Configuration
 
 Most aspects can be configured using environment variables.

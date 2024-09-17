@@ -107,7 +107,8 @@ BEGIN {
 		# tag
 		case "hostname":  Hostname	= substr($i, 2, length($i) - 3); FN = ""; break
 		case "uri":       Uri	        = substr($i, 2, length($i) - 3); FN = ""; break
-		case "unique_id": UniqueID 	= substr($i, 2, length($i) - 3); FN = ""; break
+		# This needs to remove 1 char more since it's the last entry and ends in "], instead of "]
+		case "unique_id": UniqueID 	= substr($i, 2, length($i) - 4); FN = ""; break
 		case "msg":
 			if ( substr($i, 1, 1) == "\"" ) {
 				Msg = substr($i, 2, length($i) - 1)

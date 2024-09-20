@@ -274,10 +274,10 @@ BEGIN {
 		Ver = ""
 		Maturity = ""
 
-		print json_out
+		print json_out "\n"
 
 	} else {
-		print $0
+		print $0 "\n"
 	}
 }
 

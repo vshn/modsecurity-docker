@@ -6,7 +6,7 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
     environment:
-      BACKEND: "http://backend:9000"
+      BACKEND: "http://backend:8080"
 
     # Simulate OpenShift by using a random UID and GID, as well as GID 0
     user: "1001140000:1001140000"
@@ -23,5 +23,6 @@ services:
           path: .
 
   backend:
-    image: "docker.io/kennethreitz/httpbin"
-    command: ["gunicorn", "-b", "0.0.0.0:9000", "httpbin:app", "-k", "gevent"]
+    image: "docker.io/sharat87/httpbun:latest"
+    environment:
+      HTTPBUN_BIND: "0.0.0.0:8080"

@@ -47,9 +47,9 @@ RUN chown -R 0:0 /opt/owasp-crs && \
     chmod -R g+w /opt/owasp-crs
 
 # Customized configuration files
-COPY transform-alert-message.awk virus-check.pl /opt/
-COPY clamd.conf /etc/clamav/clamd.conf
-COPY conf/* /usr/local/apache2/conf/extra/
+COPY opt/* /opt/
+COPY clamd-config/* /etc/clamav/
+COPY apache-config/* /usr/local/apache2/conf/extra/
 COPY modsecurity.d/setup.conf /etc/modsecurity.d/setup.conf
 
 # Custom ModSecurity rules

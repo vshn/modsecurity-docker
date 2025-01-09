@@ -30,11 +30,10 @@ USER root
 RUN set -x && \
     # Install additional required tools \
     apk add --no-cache clamav-clamdscan coreutils gawk && \
-    # Disable all TLS related stuff (we'll have a reverse-proxy in front of us \
-    # doing TLS termination) Also see the amended ./conf/httpd-vhosts.conf \
-    # file. \
-    sed -i '/generate-certificate/d' /docker-entrypoint.sh && \
+    # We terminate TLS on the proxy; so remove all SSL config from the vhosts \
+    sed -i '/<VirtualHost \*:${SSL_PORT}>/,/<\/VirtualHost>/d' /usr/local/apache2/conf/extra/httpd-vhosts.conf && \
     sed -i '/Include .*httpd-ssl.conf/d' /usr/local/apache2/conf/httpd.conf && \
+    sed -i '/^\/usr\/local\/bin\/generate-certificate/d' /docker-entrypoint.sh && \
     # Disable CRS plugin system \
     sed -i '/activate-plugins/d' /docker-entrypoint.sh && \
     # Disable customized logging configuration - we'll configure this in \

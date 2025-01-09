@@ -17,7 +17,7 @@ See [ghcr.io/vshn/modsecurity-docker](https://github.com/vshn/modsecurity-docker
 
 ## Development
 
-A very basic Docker Compose setup including this container with `httpbin` as the backend. To start it, run:
+A very basic Docker Compose setup including this container with `httpbun` as the backend. To start it, run:
 
 ```sh
 docker compose up

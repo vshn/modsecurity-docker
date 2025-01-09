@@ -43,13 +43,8 @@ RUN set -x && \
 # Fix Permissions
 # On OpenShift, the container will be started with a random UID and GID 0, so
 # we have to make some directories group-writeable.
-RUN chown -R 0:0 \
-        /usr/local/apache2/logs \
-        /opt/owasp-crs \
-        && \
-    chmod g+w \
-        /usr/local/apache2/logs \
-        /opt/owasp-crs
+RUN chown -R 0:0 /opt/owasp-crs && \
+    chmod -R g+w /opt/owasp-crs
 
 # Customized configuration files
 COPY transform-alert-message.awk virus-check.pl /opt/
@@ -60,6 +55,5 @@ COPY modsecurity.d/setup.conf /etc/modsecurity.d/setup.conf
 # Custom ModSecurity rules
 COPY ./custom-rules/before-crs.dist /opt/modsecurity/rules/before-crs.dist
 COPY ./custom-rules/after-crs.dist /opt/modsecurity/rules/after-crs.dist
-
 
 USER 956947:0

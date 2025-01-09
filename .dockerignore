@@ -1,0 +1,7 @@
+.git
+.github
+CODEOWNERS
+Dockerfile
+README.md
+compose.yaml
+renovate.json

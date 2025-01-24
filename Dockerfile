@@ -30,6 +30,9 @@ USER root
 RUN set -x && \
     # Install additional required tools \
     apk add --no-cache clamav-clamdscan coreutils gawk && \
+    # Restore AWK symlink - the entrypoint script assumes busybox awk, while \
+    # our transform-alert-message script assumes GNU awk. \
+    ln -sfv /bin/busybox /usr/bin/awk && \
     # We terminate TLS on the proxy; so remove all SSL config from the vhosts \
     sed -i '/<VirtualHost \*:${SSL_PORT}>/,/<\/VirtualHost>/d' /usr/local/apache2/conf/extra/httpd-vhosts.conf && \
     sed -i '/Include .*httpd-ssl.conf/d' /usr/local/apache2/conf/httpd.conf && \

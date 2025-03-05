@@ -36,8 +36,8 @@ RUN set -x && \
 		gawk && \
     rm -rf /var/lib/apt/lists/* && \
 	apt-get clean && \
-    # Restore AWK symlink - the entrypoint script assumes busybox awk, while \
-    # our transform-alert-message script assumes GNU awk. \
+    # Restore AWK symlink - our transform-alert-message script assumes GNU awk,\
+	# while the default awk implementation of the base image is mawk. \
 	ln -sfv /etc/alternatives/awk /usr/bin/awk && \
     # We terminate TLS on the proxy; so remove all SSL config from the vhosts \
     sed -i '/<VirtualHost \*:${SSL_PORT}>/,/<\/VirtualHost>/d' /usr/local/apache2/conf/extra/httpd-vhosts.conf && \

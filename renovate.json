@@ -3,8 +3,8 @@
   "packageRules": [
     {
       "matchDatasources": ["docker"],
-      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>[a-z\\-]+)-(?<build>\\d+)$",
-      "matchPackageNames": ["/^ghcr\\.io/coreruleset/modsecurity-crs$/"]
+      "matchPackageNames": ["ghcr.io/coreruleset/modsecurity-crs"],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>[a-z\\-]+)-(?<build>\\d+)$"
     },
     {
       "matchUpdateTypes": ["patch", "digest"],

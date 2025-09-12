@@ -33,6 +33,7 @@ RUN set -x && \
 	apt-get install -y --no-install-recommends \
 		clamdscan \
 		coreutils \
+		vim \
 		gawk && \
     rm -rf /var/lib/apt/lists/* && \
 	apt-get clean && \
@@ -43,6 +44,9 @@ RUN set -x && \
     sed -i '/<VirtualHost \*:${SSL_PORT}>/,/<\/VirtualHost>/d' /usr/local/apache2/conf/extra/httpd-vhosts.conf && \
     sed -i '/Include .*httpd-ssl.conf/d' /usr/local/apache2/conf/httpd.conf && \
     sed -i '/^\/usr\/local\/bin\/generate-certificate/d' /docker-entrypoint.sh && \
+	#Make sure the ProxyPass setting for error-pages is included prior to the ones in vhost settings \
+	sed -i '/httpd-modsecurity.conf/d' /usr/local/apache2/conf/httpd.conf && \
+	sed -i '/# Virtual hosts/i\Include conf/extra/httpd-modsecurity.conf' /usr/local/apache2/conf/httpd.conf && \
     # Disable CRS plugin system \
     sed -i '/activate-plugins/d' /docker-entrypoint.sh && \
     # Disable customized logging configuration - we'll configure this in \

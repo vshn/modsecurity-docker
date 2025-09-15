@@ -33,7 +33,6 @@ RUN set -x && \
 	apt-get install -y --no-install-recommends \
 		clamdscan \
 		coreutils \
-		vim \
 		gawk && \
     rm -rf /var/lib/apt/lists/* && \
 	apt-get clean && \

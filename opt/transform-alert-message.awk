@@ -239,7 +239,7 @@ BEGIN {
 
 	if ( Id != "" ) {
 		json_out = json_out "{ "
-		json_out = json_out "\"modsec-alert\": {"
+		json_out = json_out "\"modsecAlert\": {"
 		json_out = json_out "\"description\": \"" Description "\","
 		json_out = json_out "\"id\": " Id ","
 		json_out = json_out "\"client\": \"" Client "\","
@@ -255,7 +255,7 @@ BEGIN {
 		json_out = json_out "\"rev\": \"" Rev "\","
 		json_out = json_out "\"ver\": \"" Ver "\","
 		json_out = json_out "\"maturity\": \"" Maturity "\","
-		json_out = json_out "\"rule_template\": \"# ModSec Rule Exclusion: " Id " : " Msg " (severity: " Maturity " " Severity ")\""
+		json_out = json_out "\"ruleTemplate\": \"# ModSec Rule Exclusion: " Id " : " Msg " (severity: " Maturity " " Severity ")\""
 		json_out = json_out "} }"
 
 		n_tags = 0

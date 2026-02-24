@@ -55,8 +55,10 @@ RUN set -x && \
 # Fix Permissions
 # On OpenShift, the container will be started with a random UID and GID 0, so
 # we have to make some directories group-writeable.
-RUN chown -R 0:0 /opt/owasp-crs && \
-    chmod -R g+w /opt/owasp-crs
+RUN chgrp -R 0 /opt/owasp-crs && \
+    chmod -R g+rwX /opt/owasp-crs
+RUN chgrp -R 0 /usr/local/apache2/logs && \
+    chmod -R g+rwX /usr/local/apache2/logs
 
 # Customized configuration files
 COPY opt/* /opt/

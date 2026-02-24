@@ -70,4 +70,4 @@ COPY modsecurity.d/setup.conf /etc/modsecurity.d/setup.conf
 COPY ./custom-rules/before-crs.dist /opt/modsecurity/rules/before-crs.dist
 COPY ./custom-rules/after-crs.dist /opt/modsecurity/rules/after-crs.dist
 
-USER 956947:0
+USER 56947:0

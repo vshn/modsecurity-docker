@@ -1,4 +1,4 @@
-FROM ghcr.io/coreruleset/modsecurity-crs:4.26.0-apache-202605181205 
+FROM ghcr.io/coreruleset/modsecurity-crs:4.26.0-apache-202605200705 
 
 ENV ACCESSLOG=/dev/stdout \
     ERRORLOG='"|/usr/bin/stdbuf -i0 -oL /opt/transform-alert-message.awk"' \

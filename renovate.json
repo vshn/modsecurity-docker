@@ -1,5 +1,6 @@
 {
   "extends": ["config:recommended"],
+  "pinDigests": true,
   "packageRules": [
     {
       "matchDatasources": ["docker"],

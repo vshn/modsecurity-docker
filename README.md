@@ -44,7 +44,7 @@ NOTE: Tags should follow the included CRS version. Use the build number to signi
 One-Liner to create a Tag:
 
 ```sh
-tag="v$(grep '^FROM ' Dockerfile| cut -d':' -f2 | cut -d'-' -f1)-0"; git tag -s "$tag" -m "$tag"
+tag="v$(grep '^FROM ' Containerfile| cut -d':' -f2 | cut -d'-' -f1)-0"; git tag -s "$tag" -m "$tag"
 ```
 
 Don't forget to `git push --tags` afterwards!

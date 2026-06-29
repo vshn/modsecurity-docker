@@ -1,7 +1,7 @@
 .git
 .github
 CODEOWNERS
-Dockerfile
+Containerfile
 README.md
 compose.yaml
 renovate.json

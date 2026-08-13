@@ -88,6 +88,10 @@ IncludeOptional conf/extra/qos-rules-${MOD_QOS_ENABLED}.conf
 
 When disabled (or when no matching `qos-rules-on.conf` exists) the module loads but no rules apply. With `MOD_QOS_ENABLED=on` and a `qos-rules-on.conf` present, the rules take effect at server scope. See the [mod_qos documentation](https://mod-qos.sourceforge.net/) for the available directives.
 
+#### Test fixtures
+
+`tests/test_qos.sh` exercises the activation mechanism (rate-limit). `tests/test_geo.sh` adds a further end-to-end example operators can adapt: a **GeoIP country-block** (`QS_Country` + `SetEnvIf QS_Country ^(PV|LO)$` + `QS_DenyEvent +cblock`) driven by a 3-field `QS_ClientGeoCountryDB` CSV, and an **IPv6-block** (`SetEnvIf Remote_Addr :`) exercised by `mod_remoteip` + `X-Forwarded-For` over the IPv4 docker network. Both inject rules via read-only bind-mounts; the production image is unmodified.
+
 ## License
 
 This project itself is licensed under BSD 3-Clause, see [LICENSE](./LICENSE).

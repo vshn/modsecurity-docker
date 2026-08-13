@@ -1,0 +1,34 @@
+name: modsec-qos-geo-test
+
+services:
+  waf:
+    build:
+      context: ..
+      dockerfile: Containerfile
+    ports:
+      # Bind to loopback on a non-default port (8081 is the rate-limit test).
+      - "127.0.0.1:8082:8080"
+    environment:
+      BACKEND: "http://backend:8080"
+      MOD_QOS_ENABLED: "on"
+    # Mirror the production compose: random UID + GID 0 + tmpfs for apache PID/logs.
+    user: "1001140000:1001140000"
+    group_add:
+      - root
+    tmpfs:
+      - "/usr/local/apache2/logs:mode=770"
+    volumes:
+      - type: bind
+        # Rules injected via read-only bind-mount — production image unmodified.
+        source: ./qos-rules-geo.conf
+        target: /usr/local/apache2/conf/extra/qos-rules-on.conf
+        read_only: true
+      - type: bind
+        source: ./GeoIPCountryWhois.csv
+        target: /usr/local/apache2/conf/extra/geo/GeoIPCountryWhois.csv
+        read_only: true
+
+  backend:
+    image: "docker.io/sharat87/httpbun:latest@sha256:538a126de2cd4235a8f1f87deb0d002791fd2d4f274033c4050961b6153a0a9a"
+    environment:
+      HTTPBUN_BIND: "0.0.0.0:8080"

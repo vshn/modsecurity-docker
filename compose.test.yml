@@ -1,0 +1,6 @@
+services:
+  waf:
+    environment:
+      MOD_EVASIVE_ENABLED: "true"
+    volumes:
+      - ./test/evasive-override.conf:/usr/local/apache2/conf/extra/evasive-override.conf:ro

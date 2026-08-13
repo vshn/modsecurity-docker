@@ -1,0 +1,6 @@
+services:
+  waf:
+    environment:
+      MOD_EVASIVE_ENABLED: "true"
+    volumes:
+      - ./test/evasive-whitelist-ip.conf:/usr/local/apache2/conf/extra/evasive-override-wl-ip.conf:ro

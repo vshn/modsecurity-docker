@@ -22,6 +22,7 @@ ENV ACCESSLOG=/dev/stdout \
     MODSEC_REQ_BODY_NOFILES_LIMIT=5242880 \
     MODSEC_RESP_BODY_LIMIT=500000000 \
     CLAMD_DEBUG_LOG=off \
+    MOD_EVASIVE_ENABLED=false \
     # Use the default docker subnet as the default \
     HEALTHZ_CIDRS=172.18.0.0/24
 
@@ -41,6 +42,7 @@ RUN set -x && \
 	ln -sfv /etc/alternatives/awk /usr/bin/awk && \
     # We terminate TLS on the proxy; so remove all SSL config from the vhosts \
     sed -i '/<VirtualHost \*:${SSL_PORT}>/,/<\/VirtualHost>/d' /usr/local/apache2/conf/extra/httpd-vhosts.conf && \
+    sed -i '/<\/VirtualHost>/i\    Include conf/extra/evasive.conf\n    IncludeOptional conf/extra/evasive-override*.conf' /usr/local/apache2/conf/extra/httpd-vhosts.conf && \
     sed -i '/Include .*httpd-ssl.conf/d' /usr/local/apache2/conf/httpd.conf && \
     sed -i '/^\/usr\/local\/bin\/generate-certificate/d' /docker-entrypoint.sh && \
 	#Make sure the ProxyPass setting for error-pages is included prior to the ones in vhost settings \
@@ -51,6 +53,25 @@ RUN set -x && \
     # Disable customized logging configuration - we'll configure this in \
     # ./conf/vshn-logging.conf \
     sed -i '/CustomLog /d' /usr/local/apache2/conf/httpd.conf
+
+# Build and install mod_evasive (jvdmr fork) from source, pinned commit.
+# Build deps installed and purged in the same layer to keep the image lean.
+RUN set -x && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gcc make libc6-dev libapr1-dev libaprutil1-dev libpcre2-dev && \
+    curl -fsSL --cacert /etc/ssl/certs/ca-certificates.crt \
+        -o /tmp/mod_evasive.tar.gz \
+        https://codeload.github.com/jvdmr/mod_evasive/tar.gz/a9c7bc80b9c7f80db107a2b0ce2bf56100f08640 && \
+    mkdir -p /tmp/mod_evasive && \
+    tar -xzf /tmp/mod_evasive.tar.gz -C /tmp/mod_evasive --strip-components=1 && \
+    cd /tmp/mod_evasive && \
+    mv mod_evasive24.c mod_evasive.c && \
+    /usr/local/apache2/bin/apxs -i -c mod_evasive.c && \
+    cd / && rm -rf /tmp/mod_evasive /tmp/mod_evasive.tar.gz && \
+    apt-get purge -y --auto-remove \
+        gcc make libc6-dev libapr1-dev libaprutil1-dev libpcre2-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 # Fix Permissions
 # On OpenShift, the container will be started with a random UID and GID 0, so

@@ -17,3 +17,5 @@ jobs:
       - name: Verify
         run: |
           [ $(docker inspect apache --format='{{.State.Running}}') = 'true' ]
+      - name: Run mod_evasive test
+        run: sh ./test/run-tests.sh

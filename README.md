@@ -53,7 +53,7 @@ Don't forget to `git push --tags` afterwards!
 
 Most aspects can be configured using environment variables.
 For a full list of supported environment variables, see the [upstream documentation][upstream].
-We use the Apache Alpine image.
+We use the Apache Debian image.
 
 ### Extra configuration variables
 
@@ -61,6 +61,32 @@ We use the Apache Alpine image.
   This should usually be set to your Kubernetes host subnet range.
   Multiple CIDR ranges can be specified.
   Example: `1.2.3.4/24,5.6.7.8/24`
+
+### mod_qos (Quality of Service)
+
+This image additionally ships the [mod_qos](https://mod-qos.sourceforge.net/) Apache module — a quality-of-service / DoS-mitigation module that can enforce request-rate, concurrency and per-client-IP limits (among others).
+
+mod_qos is **not** packaged in Debian (or Alpine), so it is **compiled from source** in a separate build stage of the `Containerfile`; only the resulting `mod_qos.so` is copied into the runtime image (no build toolchain leaks into the final image). The pinned upstream version is `11.79` (released 2026-06-06) and the downloaded tarball is verified against a pinned SHA-256 (`MOD_QOS_SHA256`).
+
+**Security note:** as of the research date there are **no known CVEs** for mod_qos in the NVD or the Debian Security Tracker, and the project is actively maintained (latest release 2026-06-06). This is an observation, not a guarantee.
+
+#### Activation
+
+mod_qos is loaded but **inert by default** (`MOD_QOS_ENABLED=disabled`). It enforces no rules until you:
+
+1. set `MOD_QOS_ENABLED=on`, **and**
+2. supply a rules file at `/usr/local/apache2/conf/extra/qos-rules-on.conf` (e.g. via a bind-mount, a Kubernetes `Secret` or `ConfigMap`).
+
+The toggle lives in `conf/extra/vshn-qos.conf` (auto-included at server scope):
+
+```apache
+<IfModule !qos_module>
+  LoadModule qos_module modules/mod_qos.so
+</IfModule>
+IncludeOptional conf/extra/qos-rules-${MOD_QOS_ENABLED}.conf
+```
+
+When disabled (or when no matching `qos-rules-on.conf` exists) the module loads but no rules apply. With `MOD_QOS_ENABLED=on` and a `qos-rules-on.conf` present, the rules take effect at server scope. See the [mod_qos documentation](https://mod-qos.sourceforge.net/) for the available directives.
 
 ## License
 

@@ -1,0 +1,31 @@
+name: modsec-qos-test
+
+services:
+  waf:
+    build:
+      context: ..
+      dockerfile: Containerfile
+    ports:
+      # Bind to loopback on a non-default port to avoid clashing with the dev compose (8080).
+      - "127.0.0.1:8081:8080"
+    environment:
+      BACKEND: "http://backend:8080"
+      MOD_QOS_ENABLED: "on"
+    # Mirror the production compose: random UID + GID 0 + tmpfs for apache PID/logs.
+    user: "1001140000:1001140000"
+    group_add:
+      - root
+    tmpfs:
+      - "/usr/local/apache2/logs:mode=770"
+    volumes:
+      - type: bind
+        # Resolved relative to this compose file's dir (tests/). The production
+        # image is NOT modified: the rules are injected via read-only bind-mount.
+        source: ./qos-rules-on.conf
+        target: /usr/local/apache2/conf/extra/qos-rules-on.conf
+        read_only: true
+
+  backend:
+    image: "docker.io/sharat87/httpbun:latest@sha256:538a126de2cd4235a8f1f87deb0d002791fd2d4f274033c4050961b6153a0a9a"
+    environment:
+      HTTPBUN_BIND: "0.0.0.0:8080"

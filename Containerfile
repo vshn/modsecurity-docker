@@ -1,6 +1,32 @@
-FROM ghcr.io/coreruleset/modsecurity-crs:4.27.0-apache-202606290906@sha256:f7c95cb9ef6e7948a20f91e914f9d03d27b5e8fd3a95c585e14c62607ad91cd8
+ARG MODSEC_BASE_IMAGE=ghcr.io/coreruleset/modsecurity-crs:4.27.0-apache-202606290906@sha256:f7c95cb9ef6e7948a20f91e914f9d03d27b5e8fd3a95c585e14c62607ad91cd8
+
+# ---- mod_qos build stage -------------------------------------------------
+# mod_qos is not packaged in Debian/Alpine, so compile it from source in a
+# separate stage. Only the resulting mod_qos.so is copied into the runtime
+# image, keeping the build toolchain out of the final image.
+FROM ${MODSEC_BASE_IMAGE} AS qos-builder
+USER root
+ARG MOD_QOS_VERSION=11.79
+ARG MOD_QOS_SHA256=314a60638be42203cd0ed6ed1fe22085c082919545561387db4e7cb35594d755
+RUN set -x && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential libpcre2-dev libssl-dev libapr1-dev libaprutil1-dev ca-certificates && \
+    rm -rf /var/lib/apt/lists/* && \
+    curl --cacert /etc/ssl/certs/ca-certificates.crt -fsSL \
+        -o /tmp/mod_qos-${MOD_QOS_VERSION}.tar.gz \
+        "https://downloads.sourceforge.net/project/mod-qos/mod_qos-${MOD_QOS_VERSION}.tar.gz" && \
+    echo "${MOD_QOS_SHA256}  /tmp/mod_qos-${MOD_QOS_VERSION}.tar.gz" | sha256sum -c - && \
+    tar -xzf /tmp/mod_qos-${MOD_QOS_VERSION}.tar.gz -C /tmp && \
+    cd /tmp/mod_qos-${MOD_QOS_VERSION}/apache2 && \
+    /usr/local/apache2/bin/apxs -i -c mod_qos.c -lcrypto -lpcre2-8 && \
+    rm -rf /tmp/mod_qos-*
+
+# ---- runtime image -------------------------------------------------------
+FROM ${MODSEC_BASE_IMAGE}
 
 ENV ACCESSLOG=/dev/stdout \
+    MOD_QOS_ENABLED=disabled \
     ERRORLOG='"|/usr/bin/stdbuf -i0 -oL /opt/transform-alert-message.awk"' \
     PERFLOG=/dev/stdout \
     LOGLEVEL=notice \
@@ -65,6 +91,10 @@ COPY opt/* /opt/
 COPY clamd-config/* /etc/clamav/
 COPY apache-config/* /usr/local/apache2/conf/extra/
 COPY modsecurity.d/setup.conf /etc/modsecurity.d/setup.conf
+
+# mod_qos module (built in the qos-builder stage). Inert by default; activated
+# via MOD_QOS_ENABLED=on + a conf/extra/qos-rules-on.conf (see vshn-qos.conf).
+COPY --from=qos-builder /usr/local/apache2/modules/mod_qos.so /usr/local/apache2/modules/mod_qos.so
 
 # Custom ModSecurity rules
 COPY ./custom-rules/before-crs.dist /opt/modsecurity/rules/before-crs.dist

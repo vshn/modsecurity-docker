@@ -90,7 +90,9 @@ When disabled (or when no matching `qos-rules-on.conf` exists) the module loads 
 
 #### Test fixtures
 
-`tests/test_qos.sh` exercises the activation mechanism (rate-limit). `tests/test_geo.sh` adds a further end-to-end example operators can adapt: a **GeoIP country-block** (`QS_Country` + `SetEnvIf QS_Country ^(PV|LO)$` + `QS_DenyEvent +cblock`) driven by a 3-field `QS_ClientGeoCountryDB` CSV, and an **IPv6-block** (`SetEnvIf Remote_Addr :`) exercised by `mod_remoteip` + `X-Forwarded-For` over the IPv4 docker network. Both inject rules via read-only bind-mounts; the production image is unmodified.
+`tests/test_qos.sh` exercises the activation mechanism (rate-limit). `tests/test_geo.sh` adds a further end-to-end example operators can adapt: a **GeoIP country-block** (`QS_Country` + `SetEnvIf QS_Country ^(PV|LO)$` + `QS_DenyEvent +cblock`) driven by a 3-field `QS_ClientGeoCountryDB` CSV, injected via read-only bind-mounts; the production image is unmodified.
+
+**IPv6 limitation:** mod_qos GeoIP resolves `QS_Country` for **IPv4 source addresses only** (the CSV is keyed on 32-bit IPv4 numbers; IPv6 clients get no country code). **IPv6 geo-blocking is therefore not possible with mod_qos.** If you need country blocking for IPv6 clients, use a module that supports IPv6 GeoIP (e.g. `mod_maxminddb`) — this is outside the scope of the mod_qos integration here.
 
 ## License
 

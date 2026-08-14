@@ -1,0 +1,78 @@
+#!/bin/sh
+CONF=/usr/local/apache2/conf/extra/mod_qos/qos-active.conf
+: > "$CONF"
+if [ "$MOD_QOS_ENABLED" = "on" ]; then
+  echo "LoadModule qos_module modules/mod_qos.so" >> "$CONF"
+  [ -n "$QOS_CLIENT_IP_FROM_HEADER" ] && echo "QS_ClientIpFromHeader $QOS_CLIENT_IP_FROM_HEADER" >> "$CONF"
+  for ip in $(echo "$QOS_EXCLUDE_IP" | tr ',' ' '); do
+    [ -n "$ip" ] && echo "QS_SrvMaxConnExcludeIP $ip" >> "$CONF"
+  done
+  for cidr in $(echo "$HEALTHZ_CIDRS" | tr ',' ' '); do
+    prefix=$(echo "$cidr" | cut -d. -f1-2)
+    [ -n "$prefix" ] && echo "QS_SrvMaxConnExcludeIP ${prefix}." >> "$CONF"
+  done
+  [ -n "$MOD_QOS_LOGENV" ] && echo "QS_LogEnv on $MOD_QOS_LOGENV" >> "$CONF"
+  [ -n "$QOS_SRV_MAX_CONN" ] && echo "QS_SrvMaxConn $QOS_SRV_MAX_CONN" >> "$CONF"
+  [ -n "$QOS_SRV_MAX_CONN_PER_IP" ] && echo "QS_SrvMaxConnPerIP $QOS_SRV_MAX_CONN_PER_IP" >> "$CONF"
+  [ -n "$QOS_SRV_MAX_CONN_CLOSE" ] && echo "QS_SrvMaxConnClose $QOS_SRV_MAX_CONN_CLOSE" >> "$CONF"
+  [ -n "$QOS_SRV_MIN_DATA_RATE" ] && echo "QS_SrvMinDataRate $QOS_SRV_MIN_DATA_RATE" >> "$CONF"
+  [ -n "$QOS_LOC_REQUEST_LIMIT_DEFAULT" ] && echo "QS_LocRequestLimitDefault $QOS_LOC_REQUEST_LIMIT_DEFAULT" >> "$CONF"
+  [ -n "$QOS_CLIENT_EVENT_PER_SEC_LIMIT" ] && echo "QS_ClientEventPerSecLimit $QOS_CLIENT_EVENT_PER_SEC_LIMIT" >> "$CONF"
+  [ -n "$QOS_CLIENT_EVENT_LIMIT_COUNT" ] && echo "QS_ClientEventLimitCount $QOS_CLIENT_EVENT_LIMIT_COUNT" >> "$CONF"
+  [ -n "$QOS_CLIENT_EVENT_BLOCK_COUNT" ] && echo "QS_ClientEventBlockCount $QOS_CLIENT_EVENT_BLOCK_COUNT" >> "$CONF"
+  [ -n "$QOS_REQUEST_HEADER_FILTER" ] && echo "QS_RequestHeaderFilter $QOS_REQUEST_HEADER_FILTER" >> "$CONF"
+  [ -n "$QOS_LIMIT_REQUEST_BODY" ] && echo "QS_LimitRequestBody $QOS_LIMIT_REQUEST_BODY" >> "$CONF"
+  active_vars=""
+  loc_entries=""
+  if [ -n "$QOS_BLOCK_LOCATION" ]; then
+    case "$QOS_BLOCK_LOCATION" in
+      *QS_Limit=*|*,*)
+        window=$(printf '%s' "$QOS_CLIENT_EVENT_LIMIT_COUNT" | tr '\t' ' ' | awk '{print $2}'); [ -n "$window" ] || window=60
+        old_ifs="$IFS"; IFS=','
+        for entry in $QOS_BLOCK_LOCATION; do
+          p=$(printf '%s' "$entry" | awk '{print $1}')
+          spec=$(printf '%s' "$entry" | awk '{print $2}')
+          n=$(printf '%s' "$spec" | sed -n 's/^QS_Limit=//p')
+          [ -n "$p" ] && [ -n "$n" ] || continue
+          v=$(printf '%s' "$p" | sed 's/^\///; s/[^A-Za-z0-9]/_/g'); [ -n "$v" ] || v="root"
+          v="QS_Limit_$v"
+          echo "QS_ClientEventLimitCount $n $window $v" >> "$CONF"
+          active_vars="$active_vars $v"
+          loc_entries="$loc_entries $v:$p"
+        done
+        IFS="$old_ifs"
+        ;;
+      *)
+        echo "SetEnvIf Request_URI ^$QOS_BLOCK_LOCATION QS_Limit=$QOS_BLOCK_EVENTS" >> "$CONF"
+        ;;
+    esac
+  fi
+  [ -n "$QOS_CLIENT_EVENT_LIMIT_COUNT" ] && active_vars="QS_Limit $active_vars"
+  echo "IncludeOptional $QOS_CONF_FILE" >> "$CONF"
+  for e in $loc_entries; do
+    v="${e%%:*}"; p="${e##*:}"
+    echo "SetEnvIf Request_URI ^$p ${v}=1" >> "$CONF"
+  done
+  if [ -n "$QOS_ALLOW_LOCATION" ]; then
+    for ap in $(printf '%s' "$QOS_ALLOW_LOCATION" | tr ',' ' '); do
+      [ -n "$ap" ] || continue
+      for v in $active_vars; do echo "SetEnvIf Request_URI ^$ap !$v" >> "$CONF"; done
+    done
+  fi
+  hdr="$QOS_CLIENT_IP_FROM_HEADER"
+  [ -z "$hdr" ] && hdr="Remote_Addr"
+  case "$hdr" in '#USERAGENT_IP') hdr="Remote_Addr";; esac
+  for ip in $(printf '%s' "$QOS_EXCLUDE_IP" | tr ',' ' '); do
+    [ -n "$ip" ] || continue
+    pattern=$(printf '%s' "$ip" | sed 's/\./\\./g')
+    for v in $active_vars; do echo "SetEnvIf ${hdr} ^${pattern} !$v" >> "$CONF"; done
+  done
+  for cidr in $(printf '%s' "$HEALTHZ_CIDRS" | tr ',' ' '); do
+    prefix=$(printf '%s' "$cidr" | cut -d. -f1-2)
+    [ -n "$prefix" ] || continue
+    pattern=$(printf '%s' "${prefix}." | sed 's/\./\\./g')
+    for v in $active_vars; do echo "SetEnvIf ${hdr} ^${pattern} !$v" >> "$CONF"; done
+  done
+fi
+rm -f /usr/local/apache2/logs/httpd.pid
+exec httpd -DFOREGROUND "$@"

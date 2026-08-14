@@ -47,6 +47,31 @@ if [ "$MOD_QOS_ENABLED" = "on" ]; then
         ;;
     esac
   fi
+  # QOS_STATUS_LIMIT_COUNT: throttle IPs that produce too many responses of a given HTTP status code.
+  # Format: "<status> <max> <seconds>,<status> <max> <seconds>,..." e.g. "404 3 60,500 10 60".
+  # Per entry registers a distinct per-IP counter QS_Limit_stat<status>, blocked at <max> within <seconds>,
+  # driven by mod_qos's `QS_SetEnvIfStatus` (sets the env var from r->status at the output filter,
+  # post-response) + `QS_ClientEventLimitCount`.
+  # Status vars are deliberately NOT added to active_vars:
+  #   - NOT IP-whitelistable: QS_SetEnvIfStatus re-sets the env var at the output filter (post-response),
+  #     AFTER the header_parser `SetEnvIf Remote_Addr ... !<var>` unset, so IP whitelisting is a no-op.
+  #     A whitelisted IP that floods you with error codes still gets its own per-IP counter and is
+  #     blocked once IT crosses <max>.
+  #   - NOT path-allowable: same mechanism re-sets the var after the allow-path `SetEnvIf Request_URI ... !<var>`.
+  # mod_qos also evaluates `counter >= threshold` for every limit variable per request, so a client over
+  # threshold on one status is blocked on ALL paths for the window (don't expect allow-paths to bypass it).
+  if [ -n "$QOS_STATUS_LIMIT_COUNT" ]; then
+    old_ifs="$IFS"; IFS=','
+    for entry in $QOS_STATUS_LIMIT_COUNT; do
+      st=$(printf '%s' "$entry" | awk '{print $1}')
+      mx=$(printf '%s' "$entry" | awk '{print $2}')
+      sc=$(printf '%s' "$entry" | awk '{print $3}')
+      [ -n "$st" ] && [ -n "$mx" ] && [ -n "$sc" ] || continue
+      echo "QS_SetEnvIfStatus $st QS_Limit_stat${st}=1" >> "$CONF"
+      echo "QS_ClientEventLimitCount $mx $sc QS_Limit_stat${st}" >> "$CONF"
+    done
+    IFS="$old_ifs"
+  fi
   [ -n "$QOS_CLIENT_EVENT_LIMIT_COUNT" ] && active_vars="QS_Limit $active_vars"
   echo "IncludeOptional $QOS_CONF_FILE" >> "$CONF"
   for e in $loc_entries; do

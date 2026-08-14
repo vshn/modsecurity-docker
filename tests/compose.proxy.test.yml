@@ -48,6 +48,11 @@ services:
       QOS_BLOCK_LOCATION: "/blockslow QS_Limit=3,/blockfast QS_Limit=6"
       # allow-path that never burns any limit counter (don't-count semantic).
       QOS_ALLOW_LOCATION: "/allowalways"
+      # per-IP status-throttle: a client that gets more than 2 409 Responses in 60s gets blocked.
+      # 409 is not produced by any other test path (blockslow/blockfast/blockme/allowalways -> 404 from
+      # httpbun), so this counter does not pollute other assertions; the test's status-throttle assertion
+      # runs at the end of the HTTP/1.1 section right before `restart waf` (which wipes the counter).
+      QOS_STATUS_LIMIT_COUNT: "409 2 60"
     user: "10001:0"
     group_add:
       - root

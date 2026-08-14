@@ -84,6 +84,7 @@ mod_qos is **not loaded by default** (`MOD_QOS_ENABLED=disabled`). Set `MOD_QOS_
 | `QOS_EXCLUDE_IP` | `QS_SrvMaxConnExcludeIP` (one per comma-separated entry) |
 | `QOS_BLOCK_LOCATION` | per-location `QS_ClientEventLimitCount` (see below) |
 | `QOS_ALLOW_LOCATION` | allow-paths that never increment a limit counter (see below) |
+| `QOS_STATUS_LIMIT_COUNT` | per-IP per-status `QS_ClientEventLimitCount` (see below) |
 
 All default to empty (disabled). `HEALTHZ_CIDRS` IPs are automatically whitelisted (first two octets of each CIDR entry). For per-location or custom rules, bind-mount a file to `/usr/local/apache2/conf/extra/mod_qos/qos-rules.conf`.
 
@@ -103,6 +104,20 @@ The generated `SetEnvIf` setters are written to the generated `qos-active.conf` 
 **Note (by-design caveat):** `mod_qos` evaluates `counter >= threshold` on every request regardless of which path filled the counter, so an already-blocked client's request to an allow-path is **also** blocked. This is the chosen trade-off: there is no rate-limit bypass (an attacker cannot un-block themselves by interleaving an allow-path), at the cost that a flood-abusing client's `/health` is also throttled. For unthrottactable healthchecks, run them from a whitelisted source IP (`QOS_EXCLUDE_IP`/`HEALTHZ_CIDRS`) or an address outside any limit's window.
 
 The IP whitelist (`QOS_EXCLUDE_IP` / `HEALTHZ_CIDRS`) exempts source IPs from **all** active limit variables (default `QS_Limit` + each per-location variable), via `SetEnvIf Remote_Addr ^<prefix> !QS_Limit_<var>`.
+
+#### `QOS_STATUS_LIMIT_COUNT` — per-IP throttling by HTTP response status
+
+`QOS_STATUS_LIMIT_COUNT="404 3 60,408 5 60,500 10 60"` — comma-separated entries of `<HTTP-status> <max> <seconds>`. Each entry registers a **distinct per-IP counter** (`QS_Limit_stat<status>`) blocked once a single client accumulates `<max>` responses of status `<status>` within `<seconds>`.
+
+Implementation: mod_qos's `QS_SetEnvIfStatus <status> var=1` sets the env var from `r->status` at the Apache output filter (post-response), and `QS_ClientEventLimitCount <max> <seconds> QS_Limit_stat<status>` counts it per IP.
+
+**Caveats (mod_qos behaviour, verified):**
+
+- **NOT IP-whitelistable.** `QS_SetEnvIfStatus` runs at the output filter (post-response), AFTER the `SetEnvIf Remote_Addr ... !QS_Limit_stat<var>` unset at header_parser. The unset is overwritten — so `QOS_EXCLUDE_IP`/`HEALTHZ_CIDRS` do **not** exempt an IP from a status-throttle. A whitelisted IP that floods you with error codes still accumulates its own per-IP counter and is blocked once IT crosses `<max>`.
+- **NOT path-allowable.** Same mechanism: a path in `QOS_ALLOW_LOCATION` cannot unset a status env var; the response filter re-sets it.
+- **Block is path-agnostic once tripped.** mod_qos evaluates `counter >= threshold` for every active limit variable on every request. A client already over threshold on status A is blocked on **all paths** for the `<seconds>` window (so a flood of `/status/409` blocks that client even on `/anything` until the window expires).
+
+Example: `QOS_STATUS_LIMIT_COUNT="404 30 60,500 10 60"` throttles a client that gets more than 30 `404`s or more than 10 `500`s within 60 s.
 
 #### `QOS_CLIENT_IP_FROM_HEADER` behind mod_remoteip
 

@@ -53,7 +53,7 @@ Don't forget to `git push --tags` afterwards!
 
 Most aspects can be configured using environment variables.
 For a full list of supported environment variables, see the [upstream documentation][upstream].
-We use the Apache Alpine image.
+We use the Apache Debian image.
 
 ### Extra configuration variables
 
@@ -61,6 +61,29 @@ We use the Apache Alpine image.
   This should usually be set to your Kubernetes host subnet range.
   Multiple CIDR ranges can be specified.
   Example: `1.2.3.4/24,5.6.7.8/24`
+
+### mod_qos
+
+This image ships the [mod_qos](https://mod-qos.sourceforge.net/) module, compiled from source in a multi-stage build. Only the `mod_qos.so` is copied into the runtime image.
+
+mod_qos is **not loaded by default** (`MOD_QOS_ENABLED=disabled`). Set `MOD_QOS_ENABLED=on` to activate it. All options are configurable via environment variables:
+
+| Variable | Directive |
+|---|---|
+| `QOS_SRV_MAX_CONN` | `QS_SrvMaxConn` |
+| `QOS_SRV_MAX_CONN_PER_IP` | `QS_SrvMaxConnPerIP` |
+| `QOS_SRV_MAX_CONN_CLOSE` | `QS_SrvMaxConnClose` |
+| `QOS_SRV_MIN_DATA_RATE` | `QS_SrvMinDataRate` |
+| `QOS_LOC_REQUEST_LIMIT_DEFAULT` | `QS_LocRequestLimitDefault` |
+| `QOS_CLIENT_EVENT_PER_SEC_LIMIT` | `QS_ClientEventPerSecLimit` |
+| `QOS_CLIENT_EVENT_LIMIT_COUNT` | `QS_ClientEventLimitCount` |
+| `QOS_CLIENT_EVENT_BLOCK_COUNT` | `QS_ClientEventBlockCount` |
+| `QOS_REQUEST_HEADER_FILTER` | `QS_RequestHeaderFilter` |
+| `QOS_LIMIT_REQUEST_BODY` | `QS_LimitRequestBody` |
+| `QOS_CLIENT_IP_FROM_HEADER` | `QS_ClientIpFromHeader` |
+| `QOS_EXCLUDE_IP` | `QS_SrvMaxConnExcludeIP` (one per comma-separated entry) |
+
+All default to empty (disabled). `HEALTHZ_CIDRS` IPs are automatically whitelisted (first two octets of each CIDR entry). For per-location or custom rules, bind-mount a file to `/usr/local/apache2/conf/extra/qos-rules.conf`.
 
 ## License
 

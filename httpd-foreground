@@ -1,0 +1,36 @@
+#!/bin/sh
+CONF=/output/qos-active.conf
+: > "$CONF"
+if [ "$MOD_QOS_ENABLED" = "on" ]; then
+  echo "LoadModule qos_module modules/mod_qos.so" >> "$CONF"
+  [ -n "$QOS_CLIENT_IP_FROM_HEADER" ] && echo "QS_ClientIpFromHeader $QOS_CLIENT_IP_FROM_HEADER" >> "$CONF"
+  for ip in $(echo "$QOS_EXCLUDE_IP" | tr ',' ' '); do
+    [ -n "$ip" ] && echo "QS_SrvMaxConnExcludeIP $ip" >> "$CONF"
+  done
+  for cidr in $(echo "$HEALTHZ_CIDRS" | tr ',' ' '); do
+    prefix=$(echo "$cidr" | cut -d. -f1-2)
+    [ -n "$prefix" ] && echo "QS_SrvMaxConnExcludeIP ${prefix}." >> "$CONF"
+  done
+  [ -n "$QOS_SRV_MAX_CONN" ] && echo "QS_SrvMaxConn $QOS_SRV_MAX_CONN" >> "$CONF"
+  [ -n "$QOS_SRV_MAX_CONN_PER_IP" ] && echo "QS_SrvMaxConnPerIP $QOS_SRV_MAX_CONN_PER_IP" >> "$CONF"
+  [ -n "$QOS_SRV_MAX_CONN_CLOSE" ] && echo "QS_SrvMaxConnClose $QOS_SRV_MAX_CONN_CLOSE" >> "$CONF"
+  [ -n "$QOS_SRV_MIN_DATA_RATE" ] && echo "QS_SrvMinDataRate $QOS_SRV_MIN_DATA_RATE" >> "$CONF"
+  [ -n "$QOS_LOC_REQUEST_LIMIT_DEFAULT" ] && echo "QS_LocRequestLimitDefault $QOS_LOC_REQUEST_LIMIT_DEFAULT" >> "$CONF"
+  [ -n "$QOS_CLIENT_EVENT_PER_SEC_LIMIT" ] && echo "QS_ClientEventPerSecLimit $QOS_CLIENT_EVENT_PER_SEC_LIMIT" >> "$CONF"
+  [ -n "$QOS_CLIENT_EVENT_LIMIT_COUNT" ] && echo "QS_ClientEventLimitCount $QOS_CLIENT_EVENT_LIMIT_COUNT" >> "$CONF"
+  [ -n "$QOS_CLIENT_EVENT_BLOCK_COUNT" ] && echo "QS_ClientEventBlockCount $QOS_CLIENT_EVENT_BLOCK_COUNT" >> "$CONF"
+  [ -n "$QOS_REQUEST_HEADER_FILTER" ] && echo "QS_RequestHeaderFilter $QOS_REQUEST_HEADER_FILTER" >> "$CONF"
+  [ -n "$QOS_LIMIT_REQUEST_BODY" ] && echo "QS_LimitRequestBody $QOS_LIMIT_REQUEST_BODY" >> "$CONF"
+  echo "IncludeOptional conf/extra/qos-rules.conf" >> "$CONF"
+  hdr="$QOS_CLIENT_IP_FROM_HEADER"
+  [ -z "$hdr" ] && hdr="Remote_Addr"
+  for ip in $(echo "$QOS_EXCLUDE_IP" | tr ',' ' '); do
+    [ -n "$ip" ] && pattern=$(echo "$ip" | sed 's/\./\\./g') && echo "SetEnvIf ${hdr} ^${pattern} !QS_Limit" >> "$CONF"
+  done
+  for cidr in $(echo "$HEALTHZ_CIDRS" | tr ',' ' '); do
+    prefix=$(echo "$cidr" | cut -d. -f1-2)
+    [ -n "$prefix" ] && pattern=$(echo "${prefix}." | sed 's/\./\\./g') && echo "SetEnvIf ${hdr} ^${pattern} !QS_Limit" >> "$CONF"
+  done
+fi
+rm -f /usr/local/apache2/logs/httpd.pid
+exec httpd -DFOREGROUND "$@"

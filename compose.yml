@@ -23,6 +23,6 @@ services:
           path: .
 
   backend:
-    image: "docker.io/sharat87/httpbun:latest@sha256:d75d9b7731d6270cbc80e4032161428d7c445d47aa1b78eca399c92f4ed338ea"
+    image: "docker.io/sharat87/httpbun:latest@sha256:27730b0fa6134d96e43de5108f767d33a31a5fa97c81aa5d517ef5e4aafb4f7b"
     environment:
       HTTPBUN_BIND: "0.0.0.0:8080"

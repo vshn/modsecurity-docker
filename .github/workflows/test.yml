@@ -17,3 +17,12 @@ jobs:
       - name: Verify
         run: |
           [ $(docker inspect apache --format='{{.State.Running}}') = 'true' ]
+
+  mod_qos-test:
+    name: mod_qos proxy test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - name: Run mod_qos proxy test
+        run: bash tests/test_proxy.sh

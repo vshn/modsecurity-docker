@@ -1,0 +1,124 @@
+name: modsec-qos-proxy-test
+
+networks:
+  net-a:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.20.0.0/16
+  net-b:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.30.0.0/16
+  net-c:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.40.0.0/16
+  net-d:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.60.0.0/16
+  waf-net:
+    driver: bridge
+
+services:
+  backend:
+    image: "docker.io/sharat87/httpbun:latest@sha256:538a126de2cd4235a8f1f87deb0d002791fd2d4f274033c4050961b6153a0a9a"
+    environment:
+      HTTPBUN_BIND: "0.0.0.0:8080"
+    networks:
+      - waf-net
+
+  waf:
+    build:
+      context: ..
+      dockerfile: Containerfile
+    environment:
+      BACKEND: "http://backend:8080"
+      MOD_QOS_ENABLED: "on"
+      QOS_CLIENT_EVENT_LIMIT_COUNT: "3 60"
+      QOS_CLIENT_IP_FROM_HEADER: "#USERAGENT_IP"
+      REMOTEIP_INT_PROXY: "172.16.0.0/12"
+      QOS_EXCLUDE_IP: "10.20.,10.30."
+      HEALTHZ_CIDRS: "10.40.0.0/24"
+      # shared QS_Limit counter; threshold comes from QOS_CLIENT_EVENT_LIMIT_COUNT.
+      QOS_BLOCK_LOCATION: "/blockslow,/blockfast,/blockme"
+      # allow-path that never burns any limit counter (don't-count semantic).
+      QOS_ALLOW_LOCATION: "/allowalways"
+    user: "10001:0"
+    group_add:
+      - root
+    tmpfs:
+      - "/usr/local/apache2/logs:mode=770"
+    networks:
+      - waf-net
+    depends_on:
+      backend:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/anything"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  reverse-proxy:
+    image: httpd:2.4
+    command: ["httpd-foreground", "-c", "Include conf/reverse-proxy.conf"]
+    volumes:
+      - type: bind
+        source: ./reverse-proxy.conf
+        target: /usr/local/apache2/conf/reverse-proxy.conf
+        read_only: true
+    networks:
+      - net-a
+      - net-b
+      - net-c
+      - net-d
+      - waf-net
+    depends_on:
+      waf:
+        condition: service_healthy
+
+  client-a:
+    image: curlimages/curl:8.14.1
+    entrypoint: ["sleep", "infinity"]
+    networks:
+      net-a:
+        ipv4_address: 10.20.0.11
+    depends_on:
+      reverse-proxy:
+        condition: service_started
+
+  client-b:
+    image: curlimages/curl:8.14.1
+    entrypoint: ["sleep", "infinity"]
+    networks:
+      net-b:
+        ipv4_address: 10.30.0.12
+    depends_on:
+      reverse-proxy:
+        condition: service_started
+
+  client-c:
+    image: curlimages/curl:8.14.1
+    entrypoint: ["sleep", "infinity"]
+    networks:
+      net-c:
+        ipv4_address: 10.40.0.13
+    depends_on:
+      reverse-proxy:
+        condition: service_started
+
+  client-d:
+    image: curlimages/curl:8.14.1
+    entrypoint: ["sleep", "infinity"]
+    networks:
+      net-d:
+        ipv4_address: 10.60.0.14
+    depends_on:
+      reverse-proxy:
+        condition: service_started

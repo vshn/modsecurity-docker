@@ -1,4 +1,4 @@
-FROM ghcr.io/coreruleset/modsecurity-crs:4.27.0-apache-202606261106@sha256:9ea0cf58be42b59555d12b06227e3515b05eafa53c09bd9109ce9a107e811be6 AS qos-builder
+FROM ghcr.io/coreruleset/modsecurity-crs:4.28.0-apache-202608131208@sha256:a7aff2f12712f10248e8de7ac675466e9ddf8c999df09328bd5b4ad8df50223d AS qos-builder
 USER root
 ARG MOD_QOS_VERSION=11.79
 ARG MOD_QOS_SHA256=314a60638be42203cd0ed6ed1fe22085c082919545561387db4e7cb35594d755
@@ -16,7 +16,7 @@ RUN set -x && \
 WORKDIR /output/mod_qos-${MOD_QOS_VERSION}/apache2
 RUN /usr/local/apache2/bin/apxs -i -c mod_qos.c -lcrypto -lpcre2-8
 
-FROM ghcr.io/coreruleset/modsecurity-crs:4.27.0-apache-202606261106@sha256:9ea0cf58be42b59555d12b06227e3515b05eafa53c09bd9109ce9a107e811be6
+FROM ghcr.io/coreruleset/modsecurity-crs:4.28.0-apache-202608131208@sha256:a7aff2f12712f10248e8de7ac675466e9ddf8c999df09328bd5b4ad8df50223d
 
 ENV ACCESSLOG=/dev/stdout \
     ERRORLOG='"|/usr/bin/stdbuf -i0 -oL /opt/transform-alert-message.awk"' \
